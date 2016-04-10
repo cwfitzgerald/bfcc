@@ -3,6 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include "ast.hpp"
+#include "lexers/lexers.hpp"
 
 int main (int argc, char * argv[]) {
 	if (argc != 2) {
