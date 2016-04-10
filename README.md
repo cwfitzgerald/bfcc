@@ -1,3 +1,5 @@
 # The BrainFuck Compiler Collection
 
-The bfcc is an optimizing interpreter and compiler for brainfuck and in the future will support many different brainfuck dirivitives. 
+###The advanced brainfuck family compiler that literally no one asked for!
+
+The bfcc is an optimizing interpreter/transpiler for brainfuck and in the future will support many different brainfuck dirivitives. 
