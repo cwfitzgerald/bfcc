@@ -3,7 +3,7 @@ STD = -std=c++1y
 OPTIMIZE = -O3
 
 CPP_FILES = $(wildcard src/*.cpp)
-CPP_FILES +=$(wildcard src/codegen/*.cpp)
+CPP_FILES +=$(wildcard src/targets/*.cpp)
 CPP_FILES +=$(wildcard src/lexers/*.cpp)
 OBJ_FILES = $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
 
@@ -28,7 +28,7 @@ bin/%.o: src/lexers/%.cpp
 	@echo CXX $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) -c -o $@ $<
 
-bin/%.o: src/codegen/%.cpp
+bin/%.o: src/targets/%.cpp
 	@mkdir -p bin/
 	@echo CXX $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) -c -o $@ $<
