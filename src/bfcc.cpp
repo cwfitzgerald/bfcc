@@ -35,7 +35,6 @@ int main (int argc, char * argv[]) {
 	std::shared_ptr<BFCC_Target> target = std::make_shared<BFCC_Target_Brainfuck>();
 	for (auto i : nodelist) {
 		i->accept(static_cast<std::shared_ptr<BFCC_Visitor>>(target));
-		//std::cout << i->get_type();
 	}
 	std::cout << target->gen_target();
 	std::cout << std::endl;
