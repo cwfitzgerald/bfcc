@@ -10,7 +10,7 @@ These will be supported in both input and output. They are directly equivalent t
 * [Blub](https://esolangs.org/wiki/Blub) Fishy brainfuck
 * [Braincrash](https://esolangs.org/wiki/Braincrash) Brainfuck with one symbol thanks to a command pointer
 * [CompressedFuck](https://esolangs.org/wiki/CompressedFuck)
-* [F*uckF*uck](https://esolangs.org/wiki/Fuckfuck) Brainfuck with explicit words as symbols
+* [F\*uckF\*uck](https://esolangs.org/wiki/Fuckfuck) Brainfuck with explicit words as symbols
 * [GERMAN](https://esolangs.org/wiki/GERMAN) SUBTRAKTION
 * [Integral](https://esolangs.org/wiki/Integral) Coefficients of the integral of the program
 * [Omam](https://esolangs.org/wiki/Omam) Via indie folk band "Of Monsters and Men"
