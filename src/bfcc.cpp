@@ -5,18 +5,19 @@
 #include <string>
 #include <memory>
 #include "ast.hpp"
+#include "argparser.hpp"
 #include "lexers/lexers.hpp"
 #include "targets/targets.hpp"
 
 int main (int argc, char * argv[]) {
-	if (argc != 2) {
-		std::cerr << "\033[1;31mError:\033[0m invalid amount of argument" << std::endl;
-		return EX_USAGE;
+	auto parameters = argparser(argc, argv);
+	if (parameters.cont == false) {
+		return 1;
 	}
 
-	std::string input_data;
-	std::ifstream ifile (argv[1]);
-	if (ifile) {
+	/*std::string input_data;
+	std::ifstream ifile (i);
+	if (ifile) {  
 		std::stringstream ss;
 		ss << ifile.rdbuf();
 		input_data = ss.str();
@@ -37,6 +38,5 @@ int main (int argc, char * argv[]) {
 		i->accept(static_cast<std::shared_ptr<BFCC_Visitor>>(target));
 	}
 	std::cout << target->gen_target();
-	std::cout << std::endl;
-	
+	std::cout << std::endl;*/
 }
