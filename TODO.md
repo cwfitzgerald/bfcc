@@ -19,7 +19,6 @@ These will be supported in both input and output. They are directly equivalent t
 * [ReverseFuck](https://esolangs.org/wiki/ReverseFuck) All Brainfuck commands are swapped
 * [Roadrunner](https://esolangs.org/wiki/Roadrunner) MeeP
 * [Tic Tac Toe](https://esolangs.org/wiki/Tic_Tac_Toe) Play a game of tic tac toe to program
-* [TinyBF](https://esolangs.org/wiki/TinyBF) 4 character set brainfuck
 * [Unibrane](https://esolangs.org/wiki/Unibrain) 
 * [VerboseFuck](https://esolangs.org/wiki/VerboseFuck) Really unnecessarily verbose
 
@@ -29,6 +28,7 @@ These will be supported in both input and output. They are directly equivalent t
 * [Derpcode](https://esolangs.org/wiki/Derpcode) Needs binary support
 * [COW](https://esolangs.org/wiki/COW) Needs a register/stack and additional control characters
 * [DNA#](https://esolangs.org/wiki/DNA-Sharp) Needs a second pointer
+* [TinyBF](https://esolangs.org/wiki/TinyBF) Needs direction variable
 
 ##Target languages
 These are all of the languages that bfcc will compile to
