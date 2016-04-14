@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
+#include <iosfwd>
 #include <cinttypes>
 
 struct BFCC_Data {
@@ -24,9 +24,8 @@ struct BFCC_Parameters {
 	char *   ofilesrc = NULL;           //Filename of output file, if null, write to STDOUT
 	char * errfilesrc = NULL;           //Filename of error file, if null write to STDERR
 	//Streams for I/O
-	std::istream&  in = std::cin;       //Stream to read from
-	std::ostream& out = std::cout;      //Stream to send program output to
-	std::ostream& err = std::cerr;      //Stream to send error sound to
+	std::ostream* out;                  //Stream to send program output to
+	std::ostream* err;                  //Stream to send error sound to
 	//Options for help/debuging
 	uint8_t verbosity = 0;              //How verbose the output is
 	bool         cont = true;           //Flag if the program should run, false if invalid arguments
