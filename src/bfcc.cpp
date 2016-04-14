@@ -1,4 +1,3 @@
-#include <sysexits.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -77,7 +76,7 @@ int main (int argc, char * argv[]) {
 
 
 	std::shared_ptr<BFCC_Lexer> lexer = std::make_shared<BFCC_Lexer_Brainfuck>();
-	auto nodelist = lexer->gen_node(input_data);
+	auto nodelist = lexer->gen_nodes(input_data);
 
 	*parameters.err << nodelist.size() << std::endl;
 
