@@ -4,8 +4,10 @@
 #include <memory>
 
 std::vector<std::shared_ptr<BFCC_Node>>
-BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr) {
+BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
 	std::vector<std::shared_ptr<BFCC_Node>> node_list;
+
+	(void) err;
 
 	long curc = 0;
 	long curl = 0;

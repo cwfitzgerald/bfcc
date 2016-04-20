@@ -7,6 +7,7 @@
 #include "argparser.hpp"
 #include "lexers/lexers.hpp"
 #include "targets/targets.hpp"
+#include "compiler.hpp"
 
 int main (int argc, char * argv[]) {
 	auto parameters = argparser(argc, argv);
@@ -76,7 +77,8 @@ int main (int argc, char * argv[]) {
 
 
 	std::shared_ptr<BFCC_Lexer> lexer = std::make_shared<BFCC_Lexer_Brainfuck>();
-	auto nodelist = lexer->gen_nodes(input_data);
+	BFCC_Error_Handler e;
+	auto nodelist = lexer->gen_nodes(input_data, e);
 
 	*parameters.err << nodelist.size() << std::endl;
 

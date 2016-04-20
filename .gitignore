@@ -27,7 +27,11 @@
 *.out
 *.app
 
+# Test programs
+bf/
+test/
+
 # Personal Stuff
 competitors/
-test/
 bfcc
+test*.txt

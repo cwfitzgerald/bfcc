@@ -35,13 +35,13 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 		"..P = Pritty print supported (output code is formatted correctly\n\n"
 
 		"Brainfuck dirivities:\n"
-		"LT. - Brainfuck\n"
-		"... - Tiny BF\n"
+		"LT. - brainfuck\n"
+		"... - tinybf\n"
 		"Full langages:\n"
-		".TP - C\n" 
-		".TP - Go\n"
-		".TP - Java\n"
-		".TP - Python\n"
+		".TP - c\n" 
+		".TP - go\n"
+		".TP - java\n"
+		".TP - python\n"
 		;
 
 	};
