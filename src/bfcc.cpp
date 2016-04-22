@@ -74,8 +74,7 @@ int main (int argc, char * argv[]) {
 	else {
 		parameters.err = &std::cerr;
 	}
-
-
+	/*
 	std::shared_ptr<BFCC_Lexer> lexer = std::make_shared<BFCC_Lexer_Brainfuck>();
 	BFCC_Error_Handler e;
 	auto nodelist = lexer->gen_nodes(input_data, e);
@@ -88,4 +87,12 @@ int main (int argc, char * argv[]) {
 	}
 	*parameters.out << target->gen_target();
 	*parameters.out << std::endl;
+	*/
+
+	BFCC compiler (parameters);
+	compiler.generate_ast(input_data);
+	compiler.optimize();
+	compiler.generate_code();
+	if (!compiler.print_errors())
+		std::cout << compiler.get_code() << std::endl;
 }

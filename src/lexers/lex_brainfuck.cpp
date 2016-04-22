@@ -6,6 +6,7 @@
 std::vector<std::shared_ptr<BFCC_Node>>
 BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
 	std::vector<std::shared_ptr<BFCC_Node>> node_list;
+	node_list.reserve(instr.size());
 
 	(void) err;
 

@@ -41,13 +41,49 @@ BFCC::BFCC(BFCC_Parameters& p) {
 	}
 }
 
-bool BFCC::lex (std::string instr) {
+bool BFCC::generate_ast (std::string instr) {
 	//The compiling process can't continue if there is an error
 	if (errhdlr.has_error()) {
 		return false;
 	}
 
-	lexer->gen_nodes(instr, errhdlr);
+	nodelist = lexer->gen_nodes(instr, errhdlr);
 
 	return errhdlr.has_error();
+}
+
+bool BFCC::optimize () {
+	if (errhdlr.has_error()) {
+		return false;
+	}
+
+	return true;
+}
+
+bool BFCC::generate_code() {
+	if (errhdlr.has_error()) {
+		return false;
+	}
+
+	for (auto i : nodelist) {
+		i->accept(static_cast<std::shared_ptr<BFCC_Visitor>>(codegen));
+	}
+
+	final = codegen->gen_target();
+
+	return errhdlr.has_error();
+}
+
+std::string BFCC::get_code() {
+	return final;
+}
+
+bool BFCC::print_code() {
+	*params.out << final << std::endl;
+
+	return true;
+}
+
+bool BFCC::print_errors() {
+	return errhdlr.print_errors(*params.err);
 }

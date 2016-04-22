@@ -94,7 +94,7 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 			else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--language") == 0) {
 				i++;
 				if (strcmp(argv[i], "brainfuck") == 0) p.ilang = I_BF_BRAINFUCK;
-				else if (strcmp(argv[i], "tinybf") == 0) p.ilang = I_BF_BRAINFUCK;
+				else if (strcmp(argv[i], "tinybf") == 0) p.ilang = I_BF_TINYBF;
 				else {
 					std::cout << "\033[1;31mError:\033[0m " << argv[i] << " is not a valid input language. Use --list-languages for more info.\n";
 					p.cont = false;
@@ -108,6 +108,8 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 				else if (strcmp(argv[i], "go") == 0) p.olang = O_FULL_GO;
 				else if (strcmp(argv[i], "java") == 0) p.olang = O_FULL_JAVA;
 				else if (strcmp(argv[i], "python") == 0) p.olang = O_FULL_PYTHON;
+
+				else if (strcmp(argv[i], "interpreter") == 0) p.olang = O_INTERPRET;
 
 				else if (strcmp(argv[i], "brainfuck") == 0) p.olang = O_BF_BRAINFUCK;
 				else {
