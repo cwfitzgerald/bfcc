@@ -9,27 +9,22 @@ void BFCC_Node::set_data(long sline, long schar, long eline, long echar) {
 	loc.endchar   = echar;
 }
 
-void BFCC_Node_RAWAdd::accept(std::shared_ptr<BFCC_Visitor> v) {
+void BFCC_Node_PTRmv::accept(std::shared_ptr<BFCC_Visitor> v) {
 	v->visit(this);
 }
-void BFCC_Node_RAWSub::accept(std::shared_ptr<BFCC_Visitor> v) {
+
+void BFCC_Node_DATAadd::accept(std::shared_ptr<BFCC_Visitor> v) {
 	v->visit(this);
 }
-void BFCC_Node_RAWLeft::accept(std::shared_ptr<BFCC_Visitor> v) {
+
+void BFCC_Node_DATAprint::accept(std::shared_ptr<BFCC_Visitor> v) {
 	v->visit(this);
 }
-void BFCC_Node_RAWRight::accept(std::shared_ptr<BFCC_Visitor> v) {
+
+void BFCC_Node_DATAget::accept(std::shared_ptr<BFCC_Visitor> v) {
 	v->visit(this);
 }
-void BFCC_Node_RAWLeftbrk::accept(std::shared_ptr<BFCC_Visitor> v) {
-	v->visit(this);
-}
-void BFCC_Node_RAWRightbrk::accept(std::shared_ptr<BFCC_Visitor> v) {
-	v->visit(this);
-}
-void BFCC_Node_RAWDot::accept(std::shared_ptr<BFCC_Visitor> v) {
-	v->visit(this);
-}
-void BFCC_Node_RAWComma::accept(std::shared_ptr<BFCC_Visitor> v) {
+
+void BFCC_Node_CTRLLoop::accept(std::shared_ptr<BFCC_Visitor> v) {
 	v->visit(this);
 }
