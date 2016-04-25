@@ -5,6 +5,7 @@ OPTIMIZE = -O3
 CPP_FILES = $(wildcard src/*.cpp)
 CPP_FILES +=$(wildcard src/targets/*.cpp)
 CPP_FILES +=$(wildcard src/lexers/*.cpp)
+CPP_FILES +=$(wildcard src/parsers/*.cpp)
 OBJ_FILES = $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
 
 CXX=g++
@@ -29,6 +30,11 @@ bin/%.o: src/lexers/%.cpp
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) -c -o $@ $<
 
 bin/%.o: src/targets/%.cpp
+	@mkdir -p bin/
+	@echo CXX $<
+	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) -c -o $@ $<
+
+bin/%.o: src/parsers/%.cpp
 	@mkdir -p bin/
 	@echo CXX $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) -c -o $@ $<

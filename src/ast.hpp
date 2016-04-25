@@ -21,26 +21,42 @@ public:
 	virtual void accept(std::shared_ptr<BFCC_Visitor>) = 0;
 };
 
-class BFCC_Node_PTRmv       : public BFCC_Node {
-	BFCC_Node_PTRmv(long value = 1);
+class BFCC_Node_DPTRmv       : public BFCC_Node {
+private:
+	long count;
+public:
+	BFCC_Node_DPTRmv(long icount = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAadd     : public BFCC_Node {
-	BFCC_Node_DATAadd(long value = 1);
+private:
+	long count;
+public:
+	BFCC_Node_DATAadd(long icount = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAprint   : public BFCC_Node {
-	BFCC_Node_DATAprint(long count = 1);
+private:
+	long count;
+public:
+	BFCC_Node_DATAprint(long icount = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAget     : public BFCC_Node {
-	BFCC_Node_DATAget(long count = 1);
+private:
+	long count;
+public:
+	BFCC_Node_DATAget(long icount = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_CTRLLoop    : public BFCC_Node {
+private:
+	std::vector<std::shared_ptr<BFCC_Node>> subnodes; 
+public:
+	void add(std::shared_ptr<BFCC_Node>);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };

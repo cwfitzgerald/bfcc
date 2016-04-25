@@ -15,7 +15,7 @@ public:
 
 class BFCC_Target_Brainfuck : public BFCC_Target {
 public:
-	void visit (BFCC_Node_PTRmv*         n);
+	void visit (BFCC_Node_DPTRmv*        n);
 	void visit (BFCC_Node_DATAadd*       n);
 	void visit (BFCC_Node_DATAprint*     n);
 	void visit (BFCC_Node_DATAget*       n);

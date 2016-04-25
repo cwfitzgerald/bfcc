@@ -1,45 +1,29 @@
 #include "lexers.hpp"
 #include "../ast.hpp"
+#include "../parsers/bf_parser.hpp"
 #include <string>
 #include <vector>
 #include <memory>
 
 std::vector<std::shared_ptr<BFCC_Node>>
 BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
-	std::vector<std::shared_ptr<BFCC_Node>> node_list;
-
 	(void) err;
 
-	long curc = 0;
-	long curl = 0;
-
-	char lastchr = '\0';
-	long samecnt = 0;
-
-	enum bfsymbols {
-			ADD, MV, LBK, RBK, PRINT, READ, NEWLINE, OTHER
-	};
-
-	struct bftoken {
-		bfsymbols type;
-		bool neg = false;
-	};
-
-	std::vector<bftoken> tokenlist;
+	std::vector<BFCC_Token_Brainfuck> tokenlist;
 	tokenlist.reserve(instr.size());
 
 	for (char c : instr) {
-		bftoken t;
+		BFCC_Token_Brainfuck t;
 
 		switch (c) {
 			case '-':
-				t.neg = true;
+				t.val = -1;
 			case '+': //Fallthrough
 				t.type = ADD;
 				break;
 
 			case '<':
-				t.neg = true;
+				t.val = -1;
 			case '>': //Fallthrough
 				t.type = MV;
 				break;
@@ -70,5 +54,5 @@ BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
 		tokenlist.push_back(t);
 	}
 
-	return node_list;
+	return BFCC_Parser_BrainfuckLike(tokenlist);
 }
