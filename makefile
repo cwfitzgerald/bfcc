@@ -7,7 +7,7 @@ CPP_FILES +=$(wildcard src/targets/*.cpp)
 CPP_FILES +=$(wildcard src/lexers/*.cpp)
 OBJ_FILES = $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
 
-CXX=g++-5
+CXX=g++
 
 all: bfcc
 

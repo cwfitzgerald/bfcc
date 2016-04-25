@@ -15,12 +15,9 @@ public:
 
 class BFCC_Target_Brainfuck : public BFCC_Target {
 public:
-	void visit (BFCC_Node_RAWAdd*      n);
-	void visit (BFCC_Node_RAWSub*      n);
-	void visit (BFCC_Node_RAWLeft*     n);
-	void visit (BFCC_Node_RAWRight*    n);
-	void visit (BFCC_Node_RAWLeftbrk*  n);
-	void visit (BFCC_Node_RAWRightbrk* n);
-	void visit (BFCC_Node_RAWDot*      n);
-	void visit (BFCC_Node_RAWComma*    n);
+	void visit (BFCC_Node_PTRmv*         n);
+	void visit (BFCC_Node_DATAadd*       n);
+	void visit (BFCC_Node_DATAprint*     n);
+	void visit (BFCC_Node_DATAget*       n);
+	void visit (BFCC_Node_CTRLLoop*      n);
 };

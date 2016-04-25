@@ -22,18 +22,22 @@ public:
 };
 
 class BFCC_Node_PTRmv       : public BFCC_Node {
+	BFCC_Node_PTRmv(long value = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAadd     : public BFCC_Node {
+	BFCC_Node_DATAadd(long value = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAprint   : public BFCC_Node {
+	BFCC_Node_DATAprint(long count = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 
 class BFCC_Node_DATAget     : public BFCC_Node {
+	BFCC_Node_DATAget(long count = 1);
 	void accept(std::shared_ptr<BFCC_Visitor>);
 };
 

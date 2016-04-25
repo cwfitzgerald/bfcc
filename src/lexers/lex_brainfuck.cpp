@@ -1,59 +1,73 @@
 #include "lexers.hpp"
 #include "../ast.hpp"
 #include <string>
+#include <vector>
 #include <memory>
 
 std::vector<std::shared_ptr<BFCC_Node>>
 BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
 	std::vector<std::shared_ptr<BFCC_Node>> node_list;
-	node_list.reserve(instr.size());
 
 	(void) err;
 
 	long curc = 0;
 	long curl = 0;
 
+	char lastchr = '\0';
+	long samecnt = 0;
+
+	enum bfsymbols {
+			ADD, MV, LBK, RBK, PRINT, READ, NEWLINE, OTHER
+	};
+
+	struct bftoken {
+		bfsymbols type;
+		bool neg = false;
+	};
+
+	std::vector<bftoken> tokenlist;
+	tokenlist.reserve(instr.size());
+
 	for (char c : instr) {
-		std::shared_ptr<BFCC_Node> node; 
+		bftoken t;
 
 		switch (c) {
-			case '+':
-				node = std::make_shared<BFCC_Node_RAWAdd>();
-				break;
 			case '-':
-				node = std::make_shared<BFCC_Node_RAWSub>();
+				t.neg = true;
+			case '+': //Fallthrough
+				t.type = ADD;
 				break;
-			case '>':
-				node = std::make_shared<BFCC_Node_RAWLeft>();
-				break;
+
 			case '<':
-				node = std::make_shared<BFCC_Node_RAWRight>();
+				t.neg = true;
+			case '>': //Fallthrough
+				t.type = MV;
 				break;
-			case '[':
-				node = std::make_shared<BFCC_Node_RAWLeftbrk>();
-				break;
-			case ']':
-				node = std::make_shared<BFCC_Node_RAWRightbrk>();
+
+			case ',':
+				t.type = READ;
 				break;
 			case '.':
-				node = std::make_shared<BFCC_Node_RAWDot>();
+				t.type = PRINT;
 				break;
-			case ',':
-				node = std::make_shared<BFCC_Node_RAWComma>();
+
+			case '[':
+				t.type = LBK;
 				break;
+			case ']':
+				t.type = RBK;
+				break;
+
 			case '\n':
-				curl++;
-				curc=0;
-				continue;
+				t.type = NEWLINE;
+				break;
+
 			default:
-				curc++;
-				continue;
+				t.type = OTHER;
+				break;
 		}
 
-		node->set_data(curl, curc, curl, curc+1);
-
-		curc++;
-		node_list.push_back(node);
+		tokenlist.push_back(t);
 	}
 
 	return node_list;
