@@ -66,7 +66,7 @@ bool BFCC::generate_code() {
 	}
 
 	for (auto i : nodelist) {
-		i->accept(static_cast<std::shared_ptr<BFCC_Visitor>>(codegen));
+		i->accept(codegen.get());
 	}
 
 	final = codegen->gen_target();
