@@ -21,7 +21,7 @@ public:
 	virtual void accept(BFCC_Visitor *) = 0;
 };
 
-class BFCC_Node_DPTRmv       : public BFCC_Node {
+class BFCC_Node_DPTRmv       : public BFCC_Node, public std::enable_shared_from_this<BFCC_Node_DPTRmv> {
 private:
 	long count;
 public:
@@ -30,7 +30,7 @@ public:
 	void accept(BFCC_Visitor *);
 };
 
-class BFCC_Node_DATAadd     : public BFCC_Node {
+class BFCC_Node_DATAadd     : public BFCC_Node, public std::enable_shared_from_this<BFCC_Node_DATAadd> {
 private:
 	long count;
 public:
@@ -39,7 +39,7 @@ public:
 	void accept(BFCC_Visitor *);
 };
 
-class BFCC_Node_DATAprint   : public BFCC_Node {
+class BFCC_Node_DATAprint   : public BFCC_Node, public std::enable_shared_from_this<BFCC_Node_DATAprint> {
 private:
 	long count;
 public:
@@ -48,7 +48,7 @@ public:
 	void accept(BFCC_Visitor *);
 };
 
-class BFCC_Node_DATAget     : public BFCC_Node {
+class BFCC_Node_DATAget     : public BFCC_Node, public std::enable_shared_from_this<BFCC_Node_DATAget> {
 private:
 	long count;
 public:
@@ -57,7 +57,7 @@ public:
 	void accept(BFCC_Visitor *);
 };
 
-class BFCC_Node_CTRLLoop    : public BFCC_Node {
+class BFCC_Node_CTRLLoop    : public BFCC_Node, public std::enable_shared_from_this<BFCC_Node_CTRLLoop> {
 private:
 	std::vector<std::shared_ptr<BFCC_Node>> subnodes; 
 public:

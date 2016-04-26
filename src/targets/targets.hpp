@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "../ast.hpp"
 #include "../visitors.hpp"
 
@@ -15,9 +16,9 @@ public:
 
 class BFCC_Target_Brainfuck : public BFCC_Target {
 public:
-	void visit (BFCC_Node_DPTRmv*        n);
-	void visit (BFCC_Node_DATAadd*       n);
-	void visit (BFCC_Node_DATAprint*     n);
-	void visit (BFCC_Node_DATAget*       n);
-	void visit (BFCC_Node_CTRLLoop*      n);
+	void visit (std::shared_ptr<BFCC_Node_DPTRmv>        n);
+	void visit (std::shared_ptr<BFCC_Node_DATAadd>       n);
+	void visit (std::shared_ptr<BFCC_Node_DATAprint>     n);
+	void visit (std::shared_ptr<BFCC_Node_DATAget>       n);
+	void visit (std::shared_ptr<BFCC_Node_CTRLLoop>      n);
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ast.hpp"
+#include "../error.hpp"
 #include <memory>
 #include <vector>
 
@@ -13,4 +14,4 @@ struct BFCC_Token_Brainfuck {
 	long val = 1;
 };
 
-std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist);
+std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Error_Handler& err);

@@ -12,7 +12,7 @@ CXX=g++
 
 all: bfcc
 
-debug: OPTIMIZE = -Og -g -D DEBUG
+debug: OPTIMIZE = -g -D DEBUG
 debug: bfcc
 
 bfcc: $(OBJ_FILES)

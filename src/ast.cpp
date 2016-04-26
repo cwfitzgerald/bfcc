@@ -13,7 +13,7 @@ BFCC_Node_DPTRmv::BFCC_Node_DPTRmv (long icount) {
 }
 
 void BFCC_Node_DPTRmv::accept(BFCC_Visitor * v) {
-	v->visit(this);
+	v->visit(shared_from_this());
 }
 
 long BFCC_Node_DPTRmv::get_count() {
@@ -26,7 +26,7 @@ BFCC_Node_DATAadd::BFCC_Node_DATAadd (long icount) {
 }
 
 void BFCC_Node_DATAadd::accept(BFCC_Visitor * v) {
-	v->visit(this);
+	v->visit(shared_from_this());
 }
 
 
@@ -40,7 +40,7 @@ BFCC_Node_DATAprint::BFCC_Node_DATAprint (long icount) {
 }
 
 void BFCC_Node_DATAprint::accept(BFCC_Visitor * v) {
-	v->visit(this);
+	v->visit(shared_from_this());
 }
 
 long BFCC_Node_DATAprint::get_count() {
@@ -53,7 +53,7 @@ BFCC_Node_DATAget::BFCC_Node_DATAget (long icount) {
 }
 
 void BFCC_Node_DATAget::accept(BFCC_Visitor * v) {
-	v->visit(this);
+	v->visit(shared_from_this());
 }
 
 long BFCC_Node_DATAget::get_count() {
@@ -72,5 +72,5 @@ void BFCC_Node_CTRLLoop::add(std::shared_ptr<BFCC_Node> n) {
 }
 
 void BFCC_Node_CTRLLoop::accept(BFCC_Visitor * v) {
-	v->visit(this);
+	v->visit(shared_from_this());
 }

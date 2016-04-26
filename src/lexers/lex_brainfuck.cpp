@@ -7,8 +7,6 @@
 
 std::vector<std::shared_ptr<BFCC_Node>>
 BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
-	(void) err;
-
 	std::vector<BFCC_Token_Brainfuck> tokenlist;
 	tokenlist.reserve(instr.size());
 
@@ -54,5 +52,5 @@ BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr, BFCC_Error_Handler& err) {
 		tokenlist.push_back(t);
 	}
 
-	return BFCC_Parser_BrainfuckLike(tokenlist);
+	return BFCC_Parser_BrainfuckLike(tokenlist, err);
 }
