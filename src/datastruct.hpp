@@ -32,5 +32,5 @@ struct BFCC_Parameters {
 	bool        debug = false;          //Turns on debugging symbols and debug output
 	//Langages to feed to/from the parser
 	BFCC_ILangs ilang = I_BF_BRAINFUCK;
-	BFCC_OLangs olang = O_BF_BRAINFUCK;
+	BFCC_OLangs olang = O_INTERPRET;
 };

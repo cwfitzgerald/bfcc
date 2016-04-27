@@ -35,12 +35,8 @@ int main (int argc, char * argv[]) {
 	}
 
 	else {
-		while (!std::cin.eof()) {
-			char c = std::cin.get();
-			if (!std::cin.eof()) {
-				input_data += c;
-			}
-		}
+		std::cerr << "\033[1;31mError:\033[0m no input files\n";
+		return 2;
 	}
 
 
@@ -74,20 +70,6 @@ int main (int argc, char * argv[]) {
 	else {
 		parameters.err = &std::cerr;
 	}
-	/*
-	std::shared_ptr<BFCC_Lexer> lexer = std::make_shared<BFCC_Lexer_Brainfuck>();
-	BFCC_Error_Handler e;
-	auto nodelist = lexer->gen_nodes(input_data, e);
-
-	*parameters.err << nodelist.size() << std::endl;
-
-	std::shared_ptr<BFCC_Target> target = std::make_shared<BFCC_Target_Brainfuck>();
-	for (auto i : nodelist) {
-		i->accept(static_cast<std::shared_ptr<BFCC_Visitor>>(target));
-	}
-	*parameters.out << target->gen_target();
-	*parameters.out << std::endl;
-	*/
 
 	BFCC compiler (parameters);
 	compiler.generate_ast(input_data);
