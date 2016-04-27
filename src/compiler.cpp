@@ -11,7 +11,7 @@ BFCC::BFCC(BFCC_Parameters& p) {
 	//Set source language
 	switch (params.ilang) {
 		case I_BF_BRAINFUCK:
-			lexer = std::make_shared<BFCC_Lexer_Brainfuck>();
+			lexer = std::make_shared<BFCC_Lexer_Brainfuck>(params, errhdlr);
 			break;
 		case I_BF_TINYBF:
 			errhdlr.add_error("Source language tinybf is not currently supported.", 0, 0, true);
@@ -21,10 +21,10 @@ BFCC::BFCC(BFCC_Parameters& p) {
 	//Set target language
 	switch (params.olang) {
 		case O_INTERPRET:
-			errhdlr.add_error("The interpreter is not currently supported", 0, 0, true);
+			codegen = std::make_shared<BFCC_Target_Interpreter>(params, errhdlr);
 			break;
 		case O_BF_BRAINFUCK:
-			codegen = std::make_shared<BFCC_Target_Brainfuck>();
+			codegen = std::make_shared<BFCC_Target_Brainfuck>(params, errhdlr);
 			break;
 		case O_FULL_C:
 			errhdlr.add_error("The target language C is not currently supported.", 0, 0, true);
@@ -47,7 +47,7 @@ bool BFCC::generate_ast (std::string instr) {
 		return false;
 	}
 
-	nodelist = lexer->gen_nodes(instr, errhdlr);
+	nodelist = lexer->gen_nodes(instr);
 
 	return errhdlr.has_error();
 }

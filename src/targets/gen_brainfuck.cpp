@@ -1,8 +1,11 @@
-#include <string>
 #include <cmath>
-#include <iostream>
 #include <memory>
+#include <string>
 #include "targets.hpp"
+
+std::string BFCC_Target_Brainfuck::gen_target() {
+	return endsrc;
+}
 
 void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DPTRmv>    n) {
 	char c = '>';
