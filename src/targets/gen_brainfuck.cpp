@@ -1,4 +1,4 @@
-#include <cmath>
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include "targets.hpp"
@@ -12,7 +12,7 @@ void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DPTRmv>    n) {
 	if (n->get_count() < 0)
 		c = '<';
 
-	for (int i = 0; i < abs(n->get_count()); i++) {
+	for (int i = 0; i < labs(n->get_count()); i++) {
 		endsrc += c;
 	}
 };
@@ -22,7 +22,7 @@ void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DATAadd>   n) {
 	if (n->get_count() < 0)
 		c = '-';
 
-	for (int i = 0; i < abs(n->get_count()); i++) {
+	for (int i = 0; i < labs(n->get_count()); i++) {
 		endsrc += c;
 	}
 };
