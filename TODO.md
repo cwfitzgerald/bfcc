@@ -2,6 +2,12 @@
 
 While the program is nowhere near complete, I will be trying to keep track of my todos through this file. 
 
+##General
+* Auto detect source language from the extant of the input
+* Concatination of source files (why you'd wanna do that in brainfuck, beats me, but it should be an option)
+* MAYBE: reading from stdin
+* MAYBE: reading the ! flag to start input to program
+
 ##Optimization Passes
 * Lazy Moves: Moves wouldn't be evaluated until they absolutly had to, all other operations would operate with an offset. e.g. ```++++>>>+++>[-]``` would be ADD, ADD, MV, CLEAR
 * Dead Code Removal: Removes all dead loops, either because they would never be reached because it's inherant ```[...code...][this wouldn't run]``` (or a loop at the beginning of the program) or if the compiler already knows that it starts on a 0 due to Compile Time Evaluation.
