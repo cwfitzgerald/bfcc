@@ -15,7 +15,7 @@ void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DPTRmv>    n) {
 	for (int i = 0; i < labs(n->get_count()); i++) {
 		endsrc += c;
 	}
-};
+}
 
 void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DATAadd>   n) {
 	char c = '+';
@@ -25,22 +25,22 @@ void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DATAadd>   n) {
 	for (int i = 0; i < labs(n->get_count()); i++) {
 		endsrc += c;
 	}
-};
+}
 
 void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DATAprint> n) {
 	for (int i = 0; i < n->get_count(); i++){
 		endsrc += '.';
 	}
-};
+}
 
 void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_DATAget>   n) {
 	for (int i = 0; i < n->get_count(); i++){
 		endsrc += ',';
 	}
-};
+}
 
 void BFCC_Target_Brainfuck::visit (std::shared_ptr<BFCC_Node_CTRLLoop>  n) {
 	endsrc += '[';
 	n->subaccept(this);
 	endsrc += ']';
-};
+}

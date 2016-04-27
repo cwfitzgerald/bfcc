@@ -9,9 +9,17 @@ CPP_FILES +=$(wildcard src/lexers/*.cpp)
 CPP_FILES +=$(wildcard src/parsers/*.cpp)
 OBJ_FILES = $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
 
+EXTANT = 
+
 CXX=g++
 
 all: bfcc
+
+win64: CXX = x86_64-w64-mingw32-g++
+win64: STD += -static
+win64: EXTANT = .exe
+win64: prep bfcc
+	rm -f bin/*.o
 
 debug: DEBUG = -g -D DEBUG
 debug: OPTIMIZE = -O0
@@ -20,9 +28,12 @@ debug: bfcc
 profile: DEBUG = -pg
 profile: bfcc
 
+warn: WARNINGS = -Wall -Wextra -Wpedantic
+warn: bfcc
+
 bfcc: $(OBJ_FILES)
-	@echo Linking $@
-	@$(CXX) $(STD) $(DEBUG) -o $@ $^
+	@echo Linking $@$(EXTANT)
+	@$(CXX) $(STD) $(DEBUG) -o $@$(EXTANT) $^
 
 bin/%.o: src/%.cpp
 	@mkdir -p bin/
@@ -44,6 +55,8 @@ bin/%.o: src/parsers/%.cpp
 	@echo CXX $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) $(DEBUG) -c -o $@ $<
 
-clean:
-	rm bin/*.o
-	rm bfcc
+prep:
+	-rm -f bin/*.o
+
+clean: prep
+	-rm -f bfcc*

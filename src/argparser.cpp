@@ -2,6 +2,12 @@
 #include <iostream>
 #include <cstring>
 
+#ifdef _WIN32
+	#define ERROR_DISPLAY_STRING "Error: "
+#else
+	#define ERROR_DISPLAY_STRING "\033[1;31mError:\033[0m "
+#endif
+
 BFCC_Parameters argparser(int argc, char * argv[]) {
 	BFCC_Parameters p;
 
@@ -84,7 +90,7 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 				else if (argv[i][0] == '2') p.verbosity = 2;
 				else if (argv[i][0] == '3') p.verbosity = 3;
 				else {
-					std::cout << "\033[1;31mError:\033[0m " << argv[i] << " is not a valid argument to " << argv[i-1] << ".\n";
+					std::cerr << ERROR_DISPLAY_STRING << argv[i] << " is not a valid argument to " << argv[i-1] << ".\n";
 					p.cont = false;
 				}
 				continue;
@@ -95,7 +101,7 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 				if (strcmp(argv[i], "brainfuck") == 0) p.ilang = I_BF_BRAINFUCK;
 				else if (strcmp(argv[i], "tinybf") == 0) p.ilang = I_BF_TINYBF;
 				else {
-					std::cout << "\033[1;31mError:\033[0m " << argv[i] << " is not a valid input language. Use --list-languages for more info.\n";
+					std::cerr << ERROR_DISPLAY_STRING << argv[i] << " is not a valid input language. Use --list-languages for more info.\n";
 					p.cont = false;
 				}
 				continue;
@@ -112,7 +118,7 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 
 				else if (strcmp(argv[i], "brainfuck") == 0) p.olang = O_BF_BRAINFUCK;
 				else {
-					std::cout << "\033[1;31mError:\033[0m " << argv[i] << " is not a valid target language. Use --list-languages for more info.\n";
+					std::cerr << ERROR_DISPLAY_STRING << argv[i] << " is not a valid target language. Use --list-languages for more info.\n";
 					p.cont = false;
 				}
 				continue;
@@ -143,12 +149,12 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 				(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--code") == 0) ||
 				(strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--language") == 0) ||
 				(strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--target") == 0) ) {
-				std::cout << "\033[1;31mError:\033[0m " << argv[i] << " requires an argument.\n";
+				std::cerr << ERROR_DISPLAY_STRING << argv[i] << " requires an argument.\n";
 			}
 
 			//Generic error
 			else {
-				std::cout << "\033[1;31mError:\033[0m " << argv[i] << " is not a valid option.\n";
+				std::cerr << ERROR_DISPLAY_STRING << argv[i] << " is not a valid option.\n";
 			}
 			p.cont = false;
 		}

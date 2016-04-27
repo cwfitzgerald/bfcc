@@ -25,10 +25,18 @@ bool BFCC_Error_Handler::print_errors(std::ostream& err) {
 
 	for (auto e : errlist) {
 		if (e.error) {
+			#ifdef _WIN32
+			err << "Error";
+			#else
 			err << "\033[1;31mError\033[0m";
+			#endif
 		}
 		else {
-			err << "\033[1;35mWarning\033[0m";
+			#ifdef _WIN32
+			err << "Warning";
+			#else
+			err << "\033[1;31mWarning\033[0m";
+			#endif
 		}
 		err << " at Line " << e.linen << " Char " << e.charn << ": " << e.message << "\n";
 	}

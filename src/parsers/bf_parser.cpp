@@ -23,21 +23,29 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 		else {
 			std::shared_ptr<BFCC_Node> node;
 
+			auto singlenodedata = [&node, &curline, &curchar]() {
+				node->set_data(curline, curchar, curline, curchar);
+			};
+
 			switch (lasttk.type) {
 				case ADD:
 					node = std::make_shared<BFCC_Node_DATAadd> (lasttk.val);
+					singlenodedata();
 					break;
 
 				case MV:
 					node = std::make_shared<BFCC_Node_DPTRmv> (lasttk.val);
+					singlenodedata();
 					break;
 
 				case PRINT:
 					node = std::make_shared<BFCC_Node_DATAprint> (lasttk.val);
+					singlenodedata();
 					break;
 
 				case READ:
 					node = std::make_shared<BFCC_Node_DATAget> (lasttk.val);
+					singlenodedata();
 					break;
 
 				case LBK:
@@ -48,6 +56,7 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 				case RBK:
 					if (loopstack.size()) {
 						node = loopstack.back();
+						node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()), curline, curchar);
 						loopstack.pop_back();
 						loopstartlocations.pop_back();
 					}
