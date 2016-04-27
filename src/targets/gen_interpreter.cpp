@@ -34,9 +34,15 @@ std::string BFCC_Target_Interpreter::gen_target() {
 				if (ilist[iptr].data1 > 1) {
 					std::cin.ignore(ilist[iptr].data1 - 1);
 				}
+
 				char c;
-				std::cin.get(c);
-				data[dptr] = static_cast<uint8_t>(c);
+				if (std::cin.get(c)) {
+					data[dptr] = static_cast<uint8_t>(c);
+				}
+				else {
+					data[dptr] = 0;
+				}
+				
 				break;
 
 			case JZ:
