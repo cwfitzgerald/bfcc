@@ -1,4 +1,4 @@
-WARNINGS = -Wall -Wextra -Wno-sign-compare -Wno-unused-variable -Wno-switch
+WARNINGS = -Wall -Wextra -Wno-sign-compare -Wno-unused-variable 
 STD = -std=c++14
 OPTIMIZE = -O3
 DEBUG = 

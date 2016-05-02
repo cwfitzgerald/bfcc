@@ -39,6 +39,8 @@ BFCC_Parameters argparser(int argc, char * argv[]) {
 		".T. = Targetting/Codegen supported (you can compile to this language\n"
 		"..P = Pritty print supported (output code is formatted correctly\n\n"
 
+		"The interpreter:\n"
+		".T. = interpreter\n"
 		"Brainfuck dirivities:\n"
 		"LT. - brainfuck\n"
 		"... - tinybf\n"

@@ -1,10 +1,9 @@
 #include <string>
-#include <memory>
 #include <cinttypes>
-#include <iostream>
 #include "targets.hpp"
+#include "../ir.hpp"
 
-std::string BFCC_Target_Interpreter::gen_target() {
+std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist) {
 	std::vector<uint8_t> data (32768, 0);
 	unsigned long dptr = 0;
 
@@ -58,33 +57,6 @@ std::string BFCC_Target_Interpreter::gen_target() {
 				break;
 		}
 	}
+
 	return "";
-}
-
-void BFCC_Target_Interpreter::visit (std::shared_ptr<BFCC_Node_DPTRmv> n) {
-	ilist.push_back({DPTRMV, n->get_count()});
-	curinstrnum++;
-}
-
-void BFCC_Target_Interpreter::visit (std::shared_ptr<BFCC_Node_DATAadd> n) {
-	ilist.push_back({DADD, n->get_count()});
-	curinstrnum++;
-}
-
-void BFCC_Target_Interpreter::visit (std::shared_ptr<BFCC_Node_DATAprint> n) {
-	ilist.push_back({DPRINT, n->get_count()});
-	curinstrnum++;
-}
-
-void BFCC_Target_Interpreter::visit (std::shared_ptr<BFCC_Node_DATAget> n) {
-	ilist.push_back({DGET, n->get_count()});
-	curinstrnum++;
-}
-
-void BFCC_Target_Interpreter::visit (std::shared_ptr<BFCC_Node_CTRLLoop> n) {
-	ilist.push_back({JZ, 0});
-	long start = curinstrnum++;
-	n->subaccept(this);
-	ilist[start].data1 = curinstrnum++;
-	ilist.push_back({JNZ, start});
 }

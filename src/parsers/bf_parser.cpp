@@ -64,6 +64,9 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 						err.add_error("Unmatched \"]\"", curline, curchar, true);
 					}
 					break;
+
+				default:
+					break;
 			}
 
 			if (node) {

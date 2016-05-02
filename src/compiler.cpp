@@ -41,13 +41,15 @@ BFCC::BFCC(BFCC_Parameters& p) {
 	}
 }
 
-bool BFCC::generate_ast (std::string instr) {
+bool BFCC::generate_ir (std::string instr) {
 	//The compiling process can't continue if there is an error
 	if (errhdlr.has_error()) {
 		return false;
 	}
 
-	nodelist = lexer->gen_nodes(instr);
+	auto nodelist = lexer->gen_nodes(instr);
+	BFCC_AST_to_IR ati (params, errhdlr);
+	ilist = ati.generate(nodelist); 
 
 	return errhdlr.has_error();
 }
@@ -65,11 +67,7 @@ bool BFCC::generate_code() {
 		return false;
 	}
 
-	for (auto i : nodelist) {
-		i->accept(codegen.get());
-	}
-
-	final = codegen->gen_target();
+	final = codegen->generate(ilist);
 
 	return errhdlr.has_error();
 }
