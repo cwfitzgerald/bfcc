@@ -44,6 +44,10 @@ std::string BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 			case JNZ:
 				endsrc += ']';
 				break;
+
+			case NOP:
+			case END:
+				break;
 		}
 	}
 

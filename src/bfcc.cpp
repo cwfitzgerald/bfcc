@@ -80,7 +80,8 @@ int main (int argc, char * argv[]) {
 	BFCC compiler (parameters);
 	compiler.generate_ir(input_data);
 	compiler.optimize();
+	//compiler.print_ir();
 	compiler.generate_code();
 	if (!compiler.print_errors())
-		std::cout << compiler.get_code() << std::endl;
+		*parameters.out << compiler.get_code() << std::endl;
 }

@@ -55,6 +55,10 @@ std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilis
 					iptr = ilist[iptr].data1;
 				}
 				break;
+
+			case NOP:
+			case END:
+				break;
 		}
 	}
 

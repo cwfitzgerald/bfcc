@@ -1,5 +1,6 @@
 #include <memory>
 #include "compiler.hpp"
+#include "opt.hpp"
 #include "datastruct.hpp"
 #include "lexers/lexers.hpp"
 #include "targets/targets.hpp"
@@ -59,6 +60,11 @@ bool BFCC::optimize () {
 		return false;
 	}
 
+	BFCC_OP_OperationConcatination (ilist);
+	BFCC_OP_NoOpRemoval (ilist);
+
+	BFCC_OP_JumpRematch (ilist);
+
 	return true;
 }
 
@@ -74,6 +80,12 @@ bool BFCC::generate_code() {
 
 std::string BFCC::get_code() {
 	return final;
+}
+
+bool BFCC::print_ir() {
+	*params.out << BFCC_IR_PPrint(ilist);
+
+	return true;
 }
 
 bool BFCC::print_code() {

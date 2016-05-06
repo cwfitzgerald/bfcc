@@ -4,10 +4,11 @@
 #include "visitors.hpp"
 #include "error.hpp"
 #include <string>
+#include <cinttypes>
 #include <memory>
 
-enum BFCC_Bytecode {
-	DPTRMV, DADD, DPRINT, DGET, JZ, JNZ
+enum BFCC_Bytecode : uint8_t {
+	NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ
 };
 
 struct BFCC_Instruction {
@@ -36,3 +37,5 @@ public:
 	void visit (std::shared_ptr<BFCC_Node_DATAget>       n);
 	void visit (std::shared_ptr<BFCC_Node_CTRLLoop>      n);
 };
+
+std::string BFCC_IR_PPrint(std::vector<BFCC_Instruction>);

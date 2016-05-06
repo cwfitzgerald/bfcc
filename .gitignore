@@ -37,3 +37,4 @@ bfcc
 test*.txt
 report.txt
 .clang-format
+callgrind*

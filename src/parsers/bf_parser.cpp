@@ -10,75 +10,59 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 	long curline = 1;
 	long curchar = 1;
 
-	BFCC_Token_Brainfuck lasttk = {NONE, 0};
-
 	std::vector<std::shared_ptr<BFCC_Node>> nodelist;
 	std::vector<std::shared_ptr<BFCC_Node_CTRLLoop>> loopstack;
 	std::vector<std::tuple<long, long>> loopstartlocations;
 
 	for (auto t : tokenlist) {
-		if (t.type == lasttk.type && t.type != LBK && t.type != RBK) {
-			lasttk.val += t.val;
-		}
-		else {
-			std::shared_ptr<BFCC_Node> node;
+		std::shared_ptr<BFCC_Node> node;
 
-			auto singlenodedata = [&node, &curline, &curchar]() {
-				node->set_data(curline, curchar, curline, curchar);
-			};
+		auto singlenodedata = [&node, &curline, &curchar]() {
+			node->set_data(curline, curchar, curline, curchar);
+		};
 
-			switch (lasttk.type) {
-				case ADD:
-					node = std::make_shared<BFCC_Node_DATAadd> (lasttk.val);
-					singlenodedata();
-					break;
+		switch (t.type) {
+			case ADD:
+				node = std::make_shared<BFCC_Node_DATAadd> (t.val);
+				singlenodedata();
+				break;
 
-				case MV:
-					node = std::make_shared<BFCC_Node_DPTRmv> (lasttk.val);
-					singlenodedata();
-					break;
+			case MV:
+				node = std::make_shared<BFCC_Node_DPTRmv> (t.val);
+				singlenodedata();
+				break;
 
-				case PRINT:
-					node = std::make_shared<BFCC_Node_DATAprint> (lasttk.val);
-					singlenodedata();
-					break;
+			case PRINT:
+				node = std::make_shared<BFCC_Node_DATAprint> (t.val);
+				singlenodedata();
+				break;
 
-				case READ:
-					node = std::make_shared<BFCC_Node_DATAget> (lasttk.val);
-					singlenodedata();
-					break;
+			case READ:
+				node = std::make_shared<BFCC_Node_DATAget> (t.val);
+				singlenodedata();
+				break;
 
-				case LBK:
-					loopstack.push_back(std::make_shared<BFCC_Node_CTRLLoop>());
-					loopstartlocations.push_back(std::make_tuple(curline, curchar));
-					break;
+			case LBK:
+				loopstack.push_back(std::make_shared<BFCC_Node_CTRLLoop>());
+				loopstartlocations.push_back(std::make_tuple(curline, curchar));
+				break;
 
-				case RBK:
-					if (loopstack.size()) {
-						node = loopstack.back();
-						node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()), curline, curchar);
-						loopstack.pop_back();
-						loopstartlocations.pop_back();
-					}
-					else {
-						err.add_error("Unmatched \"]\"", curline, curchar, true);
-					}
-					break;
-
-				default:
-					break;
-			}
-
-			if (node) {
+			case RBK:
 				if (loopstack.size()) {
-					loopstack.back()->add(node);
+					node = loopstack.back();
+					node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()), curline, curchar);
+					loopstack.pop_back();
+					loopstartlocations.pop_back();
 				}
 				else {
-					nodelist.push_back(node);
+					err.add_error("Unmatched \"]\"", curline, curchar, true);
 				}
-			}
+				break;
 
-			lasttk = t;
+			case NEWLINE:
+			case NONE:
+			case OTHER:
+				break;
 		}
 
 		//Deal with current location
@@ -88,6 +72,15 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 		}
 		else {
 			curchar++;
+		}
+
+		if (node) {
+			if (loopstack.size()) {
+				loopstack.back()->add(node);
+			}
+			else {
+				nodelist.push_back(node);
+			}
 		}
 	}
 

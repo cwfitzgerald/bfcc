@@ -11,7 +11,7 @@ OBJ_FILES = $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
 
 EXTANT = 
 
-CXX=g++
+CXX=clang++
 
 all: bfcc
 
@@ -37,22 +37,22 @@ bfcc: $(OBJ_FILES)
 
 bin/%.o: src/%.cpp
 	@mkdir -p bin/
-	@echo CXX $<
+	@echo $(CXX) $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) $(DEBUG) -c -o $@ $<
 
 bin/%.o: src/lexers/%.cpp
 	@mkdir -p bin/
-	@echo CXX $<
+	@echo $(CXX) $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) $(DEBUG) -c -o $@ $<
 
 bin/%.o: src/targets/%.cpp
 	@mkdir -p bin/
-	@echo CXX $<
+	@echo $(CXX) $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) $(DEBUG) -c -o $@ $<
 
 bin/%.o: src/parsers/%.cpp
 	@mkdir -p bin/
-	@echo CXX $<
+	@echo $(CXX) $<
 	@$(CXX) $(STD) $(WARNINGS) $(OPTIMIZE) $(DEBUG) -c -o $@ $<
 
 prep:
