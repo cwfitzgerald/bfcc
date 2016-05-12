@@ -8,14 +8,17 @@
 #include <memory>
 
 enum BFCC_Bytecode : uint8_t {
-	NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ
+	NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ, CLEAR
 };
 
 struct BFCC_Instruction {
 	BFCC_Bytecode type;
 	long data1 = 0;
 	long data2 = 0;
-	long data3 = 0;
+	long offset = 0;
+	long startline = 0;
+	long startchar = 0;
+	std::vector<long> extradata = {};
 };
 
 class BFCC_AST_to_IR : public BFCC_Visitor {

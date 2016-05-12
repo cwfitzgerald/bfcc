@@ -52,5 +52,5 @@ BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr) {
 		tokenlist.push_back(t);
 	}
 
-	return BFCC_Parser_BrainfuckLike(tokenlist, err);
+	return BFCC_Parser_BrainfuckLike(tokenlist, *err);
 }

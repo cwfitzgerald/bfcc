@@ -18,6 +18,7 @@ private:
 	LocationInfo loc;
 public:
 	void set_data(long sline, long schar, long eline, long echar);
+	LocationInfo get_data ();
 	virtual void accept(BFCC_Visitor *) = 0;
 };
 

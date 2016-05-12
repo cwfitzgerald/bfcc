@@ -34,7 +34,7 @@ test/
 # Personal Stuff
 competitors/
 bfcc
-test*.txt
-report.txt
+*.txt
+*.data
 .clang-format
 callgrind*

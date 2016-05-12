@@ -33,7 +33,7 @@ warn: bfcc
 
 bfcc: $(OBJ_FILES)
 	@echo Linking $@$(EXTANT)
-	@$(CXX) $(STD) $(DEBUG) -o $@$(EXTANT) $^
+	@$(CXX) $(STD) $(DEBUG) $(OPTIMIZE) -o $@$(EXTANT) $^
 
 bin/%.o: src/%.cpp
 	@mkdir -p bin/

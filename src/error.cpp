@@ -17,7 +17,12 @@ void BFCC_Error_Handler::add_error(const char * instr, long linenum, long charnu
 
 bool BFCC_Error_Handler::print_errors(std::ostream& err) {
 	auto sorterr = [](BFCC_Error left, BFCC_Error right) {
-		return (left.linen < right.linen || (left.linen == right.linen && left.charn < right.charn));
+		if (left.linen == -1 && left.charn == -1)
+			return false;
+		else if (right.linen == -1 && right.charn == -1)
+			return true;
+		else 
+			return (left.linen < right.linen || (left.linen == right.linen && left.charn < right.charn));
 	};
 
 	//Sort by line number then character number of the error

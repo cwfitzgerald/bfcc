@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 #include "compiler.hpp"
 #include "opt.hpp"
 #include "datastruct.hpp"
@@ -60,10 +61,16 @@ bool BFCC::optimize () {
 		return false;
 	}
 
-	BFCC_OP_OperationConcatination (ilist);
-	BFCC_OP_NoOpRemoval (ilist);
+	//All the information about inner loops
+	std::vector<BFCC_Loop_Data> lld;
 
-	BFCC_OP_JumpRematch (ilist);
+	BFCC_OP_OperationConcatination (ilist, errhdlr);
+	BFCC_OP_DeadCodeElimination (ilist, errhdlr);
+	BFCC_OP_NoOpRemoval (ilist, errhdlr);
+	BFCC_OP_JumpRematch (ilist, errhdlr);
+	BFCC_OP_ClearLoopRem (ilist, errhdlr);
+	BFCC_OP_NoOpRemoval (ilist, errhdlr);
+	BFCC_OP_JumpRematch (ilist, errhdlr);
 
 	return true;
 }
@@ -83,7 +90,11 @@ std::string BFCC::get_code() {
 }
 
 bool BFCC::print_ir() {
-	*params.out << BFCC_IR_PPrint(ilist);
+	if (errhdlr.has_error()) {
+		return false;
+	}
+	
+	*params.err << BFCC_IR_PPrint(ilist);
 
 	return true;
 }

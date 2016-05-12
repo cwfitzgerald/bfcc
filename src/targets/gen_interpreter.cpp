@@ -1,14 +1,24 @@
 #include <string>
 #include <cinttypes>
+#include <cmath>
+#include <iostream>
 #include "targets.hpp"
 #include "../ir.hpp"
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist) {
-	std::vector<uint8_t> data (32768, 0);
-	unsigned long dptr = 0;
+	std::vector<uint8_t> data (32768+16, 0);
+	size_t dptr = 0;
 
 	auto checkptr = [&dptr]() {
 		dptr &= 32767;
+	};
+
+	auto inlinecheckptr = [](auto num){
+		return num & 32767;
 	};
 
 	for (long iptr = 0; iptr < ilist.size(); iptr++) {
@@ -20,7 +30,7 @@ std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilis
 				break;
 
 			case DADD:
-				data[dptr] += ilist[iptr].data1;
+				data[dptr] = data[dptr] + ilist[iptr].data1;
 				break;
 
 			case DPRINT:
@@ -53,6 +63,16 @@ std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilis
 			case JNZ:
 				if (data[dptr] != 0) {
 					iptr = ilist[iptr].data1;
+				}
+				break;
+
+			case CLEAR:
+				if ((data[dptr] & 1) == 1 && (ilist[iptr].data1 & 1) == 0) {
+					errhdlr->add_error("Runtime Error! Infinite clear loop.", -1,-1);
+					iptr = ilist.size();
+				}
+				else {
+					data[dptr] = 0;
 				}
 				break;
 

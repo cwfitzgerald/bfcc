@@ -8,6 +8,13 @@
 #include "targets/targets.hpp"
 #include "ir.hpp"
 
+struct BFCC_Loop_Data {
+	           size_t start_index;
+	             bool multiply;
+	std::vector<long> effects;
+	           size_t eoffset;
+};
+
 class BFCC {
 private:
 	std::shared_ptr<BFCC_Lexer> lexer;

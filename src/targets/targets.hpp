@@ -11,9 +11,9 @@ class BFCC_Target {
 protected:
 	std::string endsrc;
 	BFCC_Parameters params;
-	BFCC_Error_Handler errhdlr;
+	BFCC_Error_Handler* errhdlr;
 public:
-	BFCC_Target(BFCC_Parameters& p, BFCC_Error_Handler& e) : params(p), errhdlr(e) {};
+	BFCC_Target(BFCC_Parameters& p, BFCC_Error_Handler& e) : params(p), errhdlr(&e) {};
 	virtual std::string generate(std::vector<BFCC_Instruction>) = 0;
 };
 

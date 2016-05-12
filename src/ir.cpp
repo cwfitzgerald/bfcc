@@ -18,31 +18,31 @@ std::vector<BFCC_Instruction> BFCC_AST_to_IR::generate (std::vector<std::shared_
 }
 
 void BFCC_AST_to_IR::visit (std::shared_ptr<BFCC_Node_DPTRmv> n) {
-	ilist.push_back({DPTRMV, n->get_count()});
+	ilist.push_back({DPTRMV, n->get_count(), 0, 0, n->get_data().startline, n->get_data().startchar});
 	curinstrnum++;
 }
 
 void BFCC_AST_to_IR::visit (std::shared_ptr<BFCC_Node_DATAadd> n) {
-	ilist.push_back({DADD, n->get_count()});
+	ilist.push_back({DADD, n->get_count(), 0, 0, n->get_data().startline, n->get_data().startchar});
 	curinstrnum++;
 }
 
 void BFCC_AST_to_IR::visit (std::shared_ptr<BFCC_Node_DATAprint> n) {
-	ilist.push_back({DPRINT, n->get_count()});
+	ilist.push_back({DPRINT, n->get_count(), 0, 0, n->get_data().startline, n->get_data().startchar});
 	curinstrnum++;
 }
 
 void BFCC_AST_to_IR::visit (std::shared_ptr<BFCC_Node_DATAget> n) {
-	ilist.push_back({DGET, n->get_count()});
+	ilist.push_back({DGET, n->get_count(), 0, 0, n->get_data().startline, n->get_data().startchar});
 	curinstrnum++;
 }
 
 void BFCC_AST_to_IR::visit (std::shared_ptr<BFCC_Node_CTRLLoop> n) {
-	ilist.push_back({JZ, 0});
+	ilist.push_back({JZ, 0, 0, 0, n->get_data().startline, n->get_data().startchar});
 	long start = curinstrnum++;
 	n->subaccept(this);
 	ilist[start].data1 = curinstrnum++;
-	ilist.push_back({JNZ, start});
+	ilist.push_back({JNZ, start, 0, 0, n->get_data().endline, n->get_data().endchar});
 }
 
 std::string BFCC_IR_PPrint(std::vector<BFCC_Instruction> oplist) {
@@ -78,6 +78,10 @@ std::string BFCC_IR_PPrint(std::vector<BFCC_Instruction> oplist) {
 
 			case JNZ:
 				out << "JNZ\tJUMP_NOT_ZERO\t    " << op.data1 << "\t\tJump to " << op.data1 << " if current isn't 0";
+				break;
+
+			case CLEAR:
+				out << "CLEAR\tCLEAR_CELL\t    " << op.data1 << "\t\tClear current cell";
 				break;
 
 			case NOP:

@@ -8,6 +8,10 @@ void BFCC_Node::set_data(long sline, long schar, long eline, long echar) {
 	loc.endchar   = echar;
 }
 
+LocationInfo BFCC_Node::get_data () {
+	return loc;
+}
+
 BFCC_Node_DPTRmv::BFCC_Node_DPTRmv (long icount) {
 	count = icount;
 }

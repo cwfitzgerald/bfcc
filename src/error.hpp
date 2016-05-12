@@ -2,7 +2,7 @@
 
 #include <string> 
 #include <vector>
-#include <iostream>
+#include <iosfwd>
 
 struct BFCC_Error {
 	std::string message;
@@ -19,5 +19,5 @@ public:
 	void add_error(std::string&, long linenum, long charnum, bool err=true);
 	void add_error(const char *, long linenum, long charnum, bool err=true);
 	bool has_error();
-	bool print_errors(std::ostream& = std::cerr);
+	bool print_errors(std::ostream&);
 };
