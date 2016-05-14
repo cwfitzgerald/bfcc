@@ -2,11 +2,12 @@
 #include "../error.hpp"
 
 #include <memory>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 std::vector<std::shared_ptr<BFCC_Node>>
-BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Error_Handler& err) {
+BFCC_Parser_BrainfuckLike(std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Error_Handler& err)
+{
 	long curline = 1;
 	long curchar = 1;
 
@@ -17,28 +18,26 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 	for (auto t : tokenlist) {
 		std::shared_ptr<BFCC_Node> node;
 
-		auto singlenodedata = [&node, &curline, &curchar]() {
-			node->set_data(curline, curchar, curline, curchar);
-		};
+		auto singlenodedata = [&node, &curline, &curchar]() { node->set_data(curline, curchar, curline, curchar); };
 
 		switch (t.type) {
 			case ADD:
-				node = std::make_shared<BFCC_Node_DATAadd> (t.val);
+				node = std::make_shared<BFCC_Node_DATAadd>(t.val);
 				singlenodedata();
 				break;
 
 			case MV:
-				node = std::make_shared<BFCC_Node_DPTRmv> (t.val);
+				node = std::make_shared<BFCC_Node_DPTRmv>(t.val);
 				singlenodedata();
 				break;
 
 			case PRINT:
-				node = std::make_shared<BFCC_Node_DATAprint> (t.val);
+				node = std::make_shared<BFCC_Node_DATAprint>(t.val);
 				singlenodedata();
 				break;
 
 			case READ:
-				node = std::make_shared<BFCC_Node_DATAget> (t.val);
+				node = std::make_shared<BFCC_Node_DATAget>(t.val);
 				singlenodedata();
 				break;
 
@@ -50,7 +49,8 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 			case RBK:
 				if (loopstack.size()) {
 					node = loopstack.back();
-					node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()), curline, curchar);
+					node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()),
+								   curline, curchar);
 					loopstack.pop_back();
 					loopstartlocations.pop_back();
 				}
@@ -65,7 +65,7 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 				break;
 		}
 
-		//Deal with current location
+		// Deal with current location
 		if (t.type == NEWLINE) {
 			curline++;
 			curchar = 1;
@@ -85,7 +85,8 @@ BFCC_Parser_BrainfuckLike (std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Err
 	}
 
 	while (loopstack.size()) {
-		err.add_error("Unmatched \"[\"", std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()), false);
+		err.add_error("Unmatched \"[\"", std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()),
+					  false);
 
 		auto node = loopstack.back();
 		loopstack.pop_back();

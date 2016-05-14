@@ -1,31 +1,33 @@
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <memory>
-#include "ast.hpp"
 #include "argparser.hpp"
+#include "ast.hpp"
+#include "compiler.hpp"
 #include "lexers/lexers.hpp"
 #include "targets/targets.hpp"
-#include "compiler.hpp"
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
 
 #ifdef _WIN32
-	#define ERROR_DISPLAY_STRING "Error: "
+#define ERROR_DISPLAY_STRING "Error: "
 #else
-	#define ERROR_DISPLAY_STRING "\033[1;31mError:\033[0m "
+#define ERROR_DISPLAY_STRING "\033[1;31mError:\033[0m "
 #endif
 
-int main (int argc, char * argv[]) {
+int
+main(int argc, char* argv[])
+{
 	auto parameters = argparser(argc, argv);
 	if (parameters.cont == false) {
 		return 1;
 	}
 
 	std::string input_data;
-	std::ifstream ifile; 
+	std::ifstream ifile;
 	if (parameters.ifilesrc != NULL) {
 		ifile.open(parameters.ifilesrc);
-		if (ifile) {  
+		if (ifile) {
 			std::stringstream ss;
 			ss << ifile.rdbuf();
 			input_data = ss.str();
@@ -45,7 +47,6 @@ int main (int argc, char * argv[]) {
 		return 2;
 	}
 
-
 	std::ofstream ofile;
 	if (parameters.ofilesrc != NULL) {
 		ofile.open(parameters.ofilesrc);
@@ -60,7 +61,6 @@ int main (int argc, char * argv[]) {
 	else {
 		parameters.out = &std::cout;
 	}
-
 
 	std::ofstream errfile;
 	if (parameters.errfilesrc != NULL) {
@@ -77,7 +77,7 @@ int main (int argc, char * argv[]) {
 		parameters.err = &std::cerr;
 	}
 
-	BFCC compiler (parameters);
+	BFCC compiler(parameters);
 	compiler.generate_ir(input_data);
 	compiler.optimize();
 	if (parameters.verbosity >= 2) {

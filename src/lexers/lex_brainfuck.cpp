@@ -1,12 +1,13 @@
-#include "lexers.hpp"
 #include "../ast.hpp"
 #include "../parsers/bf_parser.hpp"
+#include "lexers.hpp"
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 std::vector<std::shared_ptr<BFCC_Node>>
-BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr) {
+BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr)
+{
 	std::vector<BFCC_Token_Brainfuck> tokenlist;
 	tokenlist.reserve(instr.size());
 
@@ -16,13 +17,13 @@ BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr) {
 		switch (c) {
 			case '-':
 				t.val = -1;
-			case '+': //Fallthrough
+			case '+': // Fallthrough
 				t.type = ADD;
 				break;
 
 			case '<':
 				t.val = -1;
-			case '>': //Fallthrough
+			case '>': // Fallthrough
 				t.type = MV;
 				break;
 
