@@ -8,7 +8,7 @@
 #include <memory>
 
 enum BFCC_Bytecode : uint8_t {
-	NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ, CLEAR
+	NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ, DDCALC, DMUL
 };
 
 struct BFCC_Instruction {

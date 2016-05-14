@@ -35,6 +35,6 @@ test/
 competitors/
 bfcc
 *.txt
-*.data
+*.data*
 .clang-format
 callgrind*

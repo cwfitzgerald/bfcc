@@ -50,46 +50,50 @@ std::string BFCC_IR_PPrint(std::vector<BFCC_Instruction> oplist) {
 
 	int maxnumwidth = std::ceil(std::log10(oplist.size())); 
 	
-	out << "Num:   Name\tLong Name \t   Data \tDescription\n";
+	out << "Num:   Name\tLong Name \t   Data \tOffset\n";
 
 	int curpos = 0;
 	for (auto op : oplist) {
 		out << " " << std::setfill('0') << std::setw(maxnumwidth) << curpos << ":   ";
 		switch (op.type) {
 			case DPTRMV:
-				out << "DPTRMV\tMOVE_DATA_POINTER    " << op.data1 << "\t\tMove " << op.data1 << " cell";
+				out << "DPTRMV\tMOVE_DATA_POINTER    " << op.data1 << "\t\t" << op.offset;
 				break;
 
 			case DADD:
-				out << "DADD\tDATA_ADD\t     " << op.data1 << "\t\tAdd " << op.data1 << " to the current cell";
+				out << "DADD\tDATA_ADD\t     " << op.data1 << "\t\t" << op.offset;
 				break;
 
 			case DPRINT:
-				out << "DPRINT\tDATA_PRINT\t     " << op.data1 << "\t\tPrint the current cell " << op.data1 << " times";
+				out << "DPRINT\tDATA_PRINT\t     " << op.data1 << "\t\t" << op.offset;
 				break;
 
 			case DGET:
-				out << "DGET\tDATA_GET\t     " << op.data1 << "\t\tIgnore " << op.data1-1 << " inputer chars, then get 1 char";
+				out << "DGET\tDATA_GET\t     " << op.data1 << "\t\t" << op.offset;
 				break;
 
 			case JZ:
-				out << "JZ\tJUMP_IF_ZERO\t     " << op.data1 << "\t\tJump to " << op.data1 << " if current 0";
+				out << "JZ\tJUMP_IF_ZERO\t     " << op.data1 << "\t\t-";
 				break;
 
 			case JNZ:
-				out << "JNZ\tJUMP_NOT_ZERO\t    " << op.data1 << "\t\tJump to " << op.data1 << " if current isn't 0";
+				out << "JNZ\tJUMP_NOT_ZERO\t     " << op.data1 << "\t\t-";
 				break;
 
-			case CLEAR:
-				out << "CLEAR\tCLEAR_CELL\t    " << op.data1 << "\t\tClear current cell";
+			case DDCALC:
+				out << "DDCALC\tDATA_DENOM_CALC\t     " << op.data1 << "\t\t" << op.offset;
+				break;
+
+			case DMUL:
+				out << "DMUL\tDATA_MULTIPLY\t     " << op.data1 << ", " << op.data2 << "\t" << op.offset;
 				break;
 
 			case NOP:
-				out << "NOP\tNO_OPERATION\t    \t\tDo nothing";
+				out << "NOP\tNO_OPERATION\t     \t\tDo nothing";
 				break;
 
 			case END:
-				out << "END\tEND_PROGRAM\t    \t\tEnd the program";
+				out << "END\tEND_PROGRAM\t     \t\tEnd the program";
 				break; 
 		}
 		curpos++;

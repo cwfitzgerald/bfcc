@@ -2,8 +2,9 @@
 #include "ir.hpp"
 #include "error.hpp"
 #include <algorithm>
+#include <iostream>
 #include <vector>
-
+#include <cinttypes>
 
 
 long BFCC_OP_NoOpRemoval (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
@@ -12,6 +13,9 @@ long BFCC_OP_NoOpRemoval (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Hand
 	auto newend = std::remove_if(oplist.begin(), oplist.end(), [](auto x){ return x.type == NOP;});
 	long rem_amount = oplist.end() - newend;
 	oplist.erase(newend, oplist.end());
+
+	BFCC_OP_JumpRematch (oplist, err);
+
 	return rem_amount;
 }
 
@@ -116,7 +120,46 @@ long BFCC_OP_DeadCodeElimination (std::vector<BFCC_Instruction>& oplist, BFCC_Er
 	return loops_removed;
 }
 
-long BFCC_OP_ClearLoopRem (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
+long BFCC_OP_LazyMoves (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
+	(void) err;
+	long mv_removed = 0;
+
+	auto offsetable = [](BFCC_Instruction i) {
+		return ((i.type == DADD)   ||
+			    (i.type == DPRINT) ||
+			    (i.type == DGET));
+	};
+
+	std::vector<BFCC_Instruction> new_oplist;
+	new_oplist.reserve(oplist.size());
+	int64_t curoffset = 0;
+	for (auto o : oplist) {
+		if (offsetable(o)) {
+			auto tmp = o;
+			tmp.offset = curoffset;
+			new_oplist.push_back(tmp);
+		}
+		else if (o.type == DPTRMV) {
+			curoffset += o.data1;
+			mv_removed++;
+		}
+		else {
+			if (curoffset) {
+				new_oplist.push_back({DPTRMV, curoffset});
+				curoffset = 0;
+			}
+			new_oplist.push_back(o);
+		}
+	}
+
+	oplist = new_oplist;
+
+	BFCC_OP_JumpRematch (oplist, err);
+
+	return mv_removed;
+}
+
+long BFCC_OP_MultiplyLoopRem (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	long loops_removed = 0;
 	size_t   last_left = 0;
 	bool         clean = true;
@@ -126,20 +169,110 @@ long BFCC_OP_ClearLoopRem (std::vector<BFCC_Instruction>& oplist, BFCC_Error_Han
 			last_left = i;
 			clean = true;
 		}
+		//Clean says that the loop is mearly composed of moves and adds.
 		else if (oplist[i].type == JNZ && clean == true) {
-			oplist[last_left].type  = CLEAR;
-			oplist[last_left].data1 = oplist[i-1].data1;
-			if ((oplist[last_left].data1 % 2) == 0) {
-				err.add_error("Clear loops with even subtractions might go on forever.", oplist[last_left].startline, oplist[last_left].startchar, false);
+			std::vector<int64_t> effects;
+			size_t           startoffset = 0;
+
+			//Find the furthest left and right the loop goes
+			//in order to make the effect vector (and access offset)
+			//the correct size. 
+			auto  left_itterator = oplist.begin()+last_left+1; //Left is inclusive
+			auto right_itterator = oplist.begin()+i;           //Right is exclusive
+			auto       itterator = left_itterator;
+			int64_t     leftmost = 0;
+			int64_t    rightmost = 0;
+			
+			int64_t     cur = 0;
+			int64_t working = 0;
+			while (itterator != right_itterator) {
+				if (itterator->type == DPTRMV) {
+					cur += itterator->data1;
+					working = cur;
+				}
+				else if (itterator->type == DADD) {
+					working = cur + itterator->offset;
+				}
+				if (working < leftmost) {
+					leftmost = working;
+				}
+				else if (rightmost < working) {
+					rightmost = working;
+				}
+				itterator++;
 			}
-			loops_removed++;
-			std::fill(oplist.begin()+(i-1), oplist.begin()+(i+1), BFCC_Instruction({NOP}));
+
+			effects.resize(rightmost - leftmost + 1, 0);
+			startoffset = std::abs(leftmost);
+
+			//if the loop is balanced unroll loop
+			if (cur == 0) {
+				//Calculate effects of the loop
+				itterator = left_itterator;
+
+				while (itterator != right_itterator) {
+					if (itterator->type == DADD) {
+						cur = itterator->offset;
+						effects[cur+startoffset] += itterator->data1;
+					}
+					itterator++;
+				}
+
+				/*for (auto pI : effects) 
+					std::cout << pI << " ";
+				std::cout << "\n";*/
+			}
+			else {
+				break;
+			}
+
+			//Check if it's optimizable
+			int64_t denominator = std::abs(effects[startoffset]);
+
+			if (effects[startoffset] > 0) {
+				break;
+			}
+			else if (effects[startoffset] == 0) {
+				err.add_error("Balanced loops which never decrement the starting cell will be infinite.", left_itterator->startline, left_itterator->startchar-1);
+				break;
+			}
+			else if ((effects[startoffset] & 1) == 0) {
+				err.add_error("Balanced loops which decrement the starting cell by an even number will be infinite if current cell is odd.", left_itterator->startline, left_itterator->startchar-1, false);
+			}
+
+			//Take the information on the loop and actually
+			//unroll the loop.
+			itterator = left_itterator - 1; //Overwrite the jump command
+
+			//Loops that decrement start by more than one need special
+			//calculations done to figure out how many times the loop
+			//actauly runs
+			if (denominator > 1) {
+				*itterator = {DDCALC, denominator};
+				itterator++;
+			}
+			for (size_t j = 0; itterator != right_itterator+1; j++) {
+				if (j < effects.size()) {
+					if (effects[j] != 0 && j != startoffset) {
+						*itterator = {DMUL, effects[j], denominator > 1, static_cast<long>(j-startoffset)};
+						itterator++;
+					}
+				}
+				else {
+					*itterator = {NOP};
+					itterator++;
+				}
+			}
+			*(--itterator) = {DMUL, effects[startoffset], denominator > 1, 0};
+
 			clean = false;
 		}
-		else if (oplist[i].type != DADD) {
+		else if (oplist[i].type != DADD && oplist[i].type != DPTRMV) {
 			clean = false;
 		}
 	}
+
+	BFCC_OP_NoOpRemoval (oplist, err);
+
 	return loops_removed;
 }
-

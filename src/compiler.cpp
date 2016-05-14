@@ -61,16 +61,11 @@ bool BFCC::optimize () {
 		return false;
 	}
 
-	//All the information about inner loops
-	std::vector<BFCC_Loop_Data> lld;
-
 	BFCC_OP_OperationConcatination (ilist, errhdlr);
 	BFCC_OP_DeadCodeElimination (ilist, errhdlr);
 	BFCC_OP_NoOpRemoval (ilist, errhdlr);
-	BFCC_OP_JumpRematch (ilist, errhdlr);
-	BFCC_OP_ClearLoopRem (ilist, errhdlr);
-	BFCC_OP_NoOpRemoval (ilist, errhdlr);
-	BFCC_OP_JumpRematch (ilist, errhdlr);
+	BFCC_OP_LazyMoves (ilist, errhdlr);
+	BFCC_OP_MultiplyLoopRem (ilist, errhdlr);
 
 	return true;
 }
