@@ -1,13 +1,10 @@
 #include <string>
 #include <cinttypes>
 #include <cmath>
+#include <chrono>
 #include <iostream>
 #include "targets.hpp"
 #include "../ir.hpp"
-
-template <typename T> int sgn(T val) {
-	return (T(0) < val) - (val < T(0));
-}
 
 std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist) {
 	std::vector<uint8_t> data (32768+16, 0);
@@ -22,6 +19,10 @@ std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilis
 	auto icp = [](auto num){
 		return num & 32767;
 	};
+
+	//Timing stuffs
+	auto start_clock = std::chrono::high_resolution_clock::now();
+	uint64_t instructions_executed = 0;
 
 	auto instruction_count = ilist.size();
 	for (size_t iptr = 0; iptr < instruction_count; iptr++) {
@@ -99,7 +100,15 @@ std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilis
 			case END:
 				break;
 		}
+		instructions_executed++;
 	}
+
+	auto end_clock = std::chrono::high_resolution_clock::now();
+	auto totaltime = end_clock - start_clock;
+	std::cerr << "\nThe interpreter took " << static_cast<double>(totaltime.count())/1'000'000'000 << " seconds to run a " << ilist.size() << " instruction program"
+	          << "\n" << instructions_executed << " instructions were executed."
+	          << "\n" << static_cast<double>(totaltime.count())/instructions_executed << " ns per instruction. (" << instructions_executed/(static_cast<double>(totaltime.count())/1'000'000'000) << " instructions per second)"
+	          << "\n";
 
 	return "";
 }

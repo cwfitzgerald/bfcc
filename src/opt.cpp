@@ -263,7 +263,7 @@ long BFCC_OP_MultiplyLoopRem (std::vector<BFCC_Instruction>& oplist, BFCC_Error_
 					itterator++;
 				}
 			}
-			*(--itterator) = {DMUL, effects[startoffset], denominator > 1, 0};
+			*(--itterator) = {DMUL, -1, denominator > 1, 0};
 
 			clean = false;
 		}
