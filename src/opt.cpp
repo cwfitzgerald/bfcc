@@ -1,4 +1,5 @@
 #include "opt.hpp"
+#include "datastruct.hpp"
 #include "error.hpp"
 #include "ir.hpp"
 #include <algorithm>
@@ -7,7 +8,7 @@
 #include <vector>
 
 long
-BFCC_OP_NoOpRemoval(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_NoOpRemoval(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	(void) err;
 
@@ -15,15 +16,19 @@ BFCC_OP_NoOpRemoval(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& e
 	long rem_amount = oplist.end() - newend;
 	oplist.erase(newend, oplist.end());
 
-	BFCC_OP_JumpRematch(oplist, err);
+	BFCC_OP_JumpRematch(params, oplist, err);
 
 	return rem_amount;
 }
 
 long
-BFCC_OP_OperationConcatination(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_OperationConcatination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	(void) err;
+
+	if (params.fdeadcodeelimination == false) {
+		return 0;
+	}
 
 	BFCC_Instruction lastop = { oplist.front().type };
 	long lastoploc			= 0;
@@ -49,13 +54,16 @@ BFCC_OP_OperationConcatination(std::vector<BFCC_Instruction>& oplist, BFCC_Error
 		}
 	}
 
+	BFCC_OP_NoOpRemoval(params, oplist, err);
+
 	return totalrem;
 }
 
 long
-BFCC_OP_JumpRematch(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_JumpRematch(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	(void) err;
+	(void) params;
 
 	std::vector<long> loop_indexes;
 	long corrected = 0;
@@ -86,10 +94,14 @@ BFCC_OP_JumpRematch(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& e
 }
 
 long
-BFCC_OP_DeadCodeElimination(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_DeadCodeElimination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	long loops_removed = 0;
-	auto removeloop	= [&oplist, &err](long start) {
+	auto removeloop	= [&params, &oplist, &err](long start) {
+		if (params.fdeadcodeelimination == false) {
+			return;
+		}
+
 		long depth = 0;
 		long end   = 0;
 
@@ -126,13 +138,20 @@ BFCC_OP_DeadCodeElimination(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Ha
 		lasttype = oplist[i].type;
 	}
 
+	BFCC_OP_NoOpRemoval(params, oplist, err);
+
 	return loops_removed;
 }
 
 long
-BFCC_OP_LazyMoves(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	(void) err;
+
+	if (params.flazymoves == 0) {
+		return 0;
+	}
+
 	long mv_removed = 0;
 
 	auto offsetable = [](BFCC_Instruction i) { return ((i.type == DADD) || (i.type == DPRINT) || (i.type == DGET)); };
@@ -161,13 +180,13 @@ BFCC_OP_LazyMoves(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err
 
 	oplist = new_oplist;
 
-	BFCC_OP_JumpRematch(oplist, err);
+	BFCC_OP_JumpRematch(params, oplist, err);
 
 	return mv_removed;
 }
 
 long
-BFCC_OP_MultiplyLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
 	long loops_removed = 0;
 	size_t last_left   = 0;
@@ -218,12 +237,22 @@ BFCC_OP_MultiplyLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handle
 			if (cur == 0) {
 				// Calculate effects of the loop
 				itterator = left_itterator;
+				working   = 0;
 
 				while (itterator != right_itterator) {
-					if (itterator->type == DADD) {
-						cur = itterator->offset;
-						effects[cur + startoffset] += itterator->data1;
+					if (itterator->type == DPTRMV) {
+						cur += itterator->data1;
+						working = cur;
 					}
+					else if (itterator->type == DADD) {
+						working = cur + itterator->offset;
+						effects[working + startoffset] += itterator->data1;
+					} /*
+					 if (itterator->type == DADD) {
+						 cur		= itterator->offset;
+						 working = cur;
+						 effects[cur + startoffset] += itterator->data1;
+					 }*/
 					itterator++;
 				}
 
@@ -232,24 +261,33 @@ BFCC_OP_MultiplyLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handle
 				std::cout << "\n";*/
 			}
 			else {
-				break;
+				clean = false;
+				continue;
 			}
 
 			// Check if it's optimizable
 			int64_t denominator = std::abs(effects[startoffset]);
 
 			if (effects[startoffset] > 0) {
-				break;
+				clean = false;
+				continue;
 			}
 			else if (effects[startoffset] == 0) {
 				err.add_error("Balanced loops which never decrement the starting cell will be infinite.",
 							  left_itterator->startline, left_itterator->startchar - 1);
-				break;
+				clean = false;
+				continue;
 			}
 			else if ((effects[startoffset] & 1) == 0) {
 				err.add_error("Balanced loops which decrement the starting cell by an even number will be infinite if "
 							  "current cell is odd.",
 							  left_itterator->startline, left_itterator->startchar - 1, false);
+			}
+
+			// If allowed, actually optimize
+			if (params.fmultiplyloop == false) {
+				clean = false;
+				continue;
 			}
 
 			// Take the information on the loop and actually
@@ -284,14 +322,18 @@ BFCC_OP_MultiplyLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handle
 		}
 	}
 
-	BFCC_OP_NoOpRemoval(oplist, err);
+	BFCC_OP_NoOpRemoval(params, oplist, err);
 
 	return loops_removed;
 }
 
 long
-BFCC_OP_ScanLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+BFCC_OP_ScanLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
+	if (params.fscanloop == false) {
+		return 0;
+	}
+
 	long loops_removed = 0;
 	size_t last_left   = 0;
 	bool clean		   = true;
@@ -302,7 +344,7 @@ BFCC_OP_ScanLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& e
 			clean	 = true;
 		}
 		// Clean says that the loop is mearly composed of moves.
-		else if (oplist[i].type == JNZ && clean == true) {
+		else if (oplist[i].type == JNZ && clean == true && params.fscanloop) {
 			auto& tmp			  = oplist[last_left];
 			tmp.type			  = SCAN;
 			tmp.data1			  = oplist[last_left + 1].data1;
@@ -316,7 +358,7 @@ BFCC_OP_ScanLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& e
 		}
 	}
 
-	BFCC_OP_NoOpRemoval(oplist, err);
+	BFCC_OP_NoOpRemoval(params, oplist, err);
 
 	return loops_removed;
 }

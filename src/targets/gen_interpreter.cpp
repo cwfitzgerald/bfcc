@@ -15,8 +15,7 @@ BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist)
 	size_t multiplication_cache = 1;
 
 	auto checkptr = [&dptr]() { dptr &= 32767; };
-
-	auto icp = [](auto num) { return num & 32767; };
+	auto icp	  = [](auto num) { return num & 32767; };
 
 	// Timing stuffs
 	auto start_clock			   = std::chrono::high_resolution_clock::now();

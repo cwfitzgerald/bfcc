@@ -103,6 +103,7 @@ argparser(int argc, char* argv[])
 				continue;
 			}
 
+			// Languages
 			else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--language") == 0) {
 				i++;
 				if (strcmp(argv[i], "brainfuck") == 0)
@@ -131,8 +132,9 @@ argparser(int argc, char* argv[])
 				else if (strcmp(argv[i], "interpreter") == 0)
 					p.olang = O_INTERPRET;
 
-				else if (strcmp(argv[i], "brainfuck") == 0)
+				else if (strcmp(argv[i], "brainfuck") == 0) {
 					p.olang = O_BF_BRAINFUCK;
+				}
 				else {
 					std::cerr << ERROR_DISPLAY_STRING << argv[i]
 							  << " is not a valid target language. Use --list-languages for more info.\n";
@@ -157,6 +159,77 @@ argparser(int argc, char* argv[])
 			p.cont = false;
 		}
 
+		// Optimization (general)
+		else if (argv[i][0] == '-' && argv[i][1] == 'O') {
+			switch (argv[i][2]) {
+				case '-':
+					p.foperatorconcatination = false;
+					p.fdeadcodeelimination   = false;
+					p.flazymoves			 = false;
+					p.fmultiplyloop			 = false;
+					p.fscanloop				 = false;
+				case '0':
+					p.foperatorconcatination = true;
+					p.fdeadcodeelimination   = false;
+					p.flazymoves			 = false;
+					p.fmultiplyloop			 = false;
+					p.fscanloop				 = false;
+					break;
+				case '1':
+					p.foperatorconcatination = true;
+					p.fdeadcodeelimination   = true;
+					p.flazymoves			 = true;
+					p.fmultiplyloop			 = false;
+					p.fscanloop				 = false;
+					break;
+				case '2':
+				case '3':
+					p.foperatorconcatination = true;
+					p.fdeadcodeelimination   = true;
+					p.flazymoves			 = true;
+					p.fmultiplyloop			 = true;
+					p.fscanloop				 = true;
+					break;
+				default:
+					std::cerr << ERROR_DISPLAY_STRING << argv[i][2] << " is not a valid argument to -O\n";
+					p.cont = false;
+					break;
+			}
+		}
+
+		// Optimization (specific)
+		else if (strcmp(argv[i], "-foperator-concatination") == 0) {
+			p.foperatorconcatination = true;
+		}
+		else if (strcmp(argv[i], "-fdead-code-elimination") == 0) {
+			p.fdeadcodeelimination = true;
+		}
+		else if (strcmp(argv[i], "-flazy-moves") == 0) {
+			p.flazymoves = true;
+		}
+		else if (strcmp(argv[i], "-fmultiply-loops") == 0) {
+			p.fmultiplyloop = true;
+		}
+		else if (strcmp(argv[i], "-fscan-loop") == 0) {
+			p.fscanloop = true;
+		}
+
+		else if (strcmp(argv[i], "-fno-operator-concatination") == 0) {
+			p.foperatorconcatination = false;
+		}
+		else if (strcmp(argv[i], "-fno-dead-code-elimination") == 0) {
+			p.fdeadcodeelimination = false;
+		}
+		else if (strcmp(argv[i], "-fno-lazy-moves") == 0) {
+			p.flazymoves = false;
+		}
+		else if (strcmp(argv[i], "-fno-multiply-loops") == 0) {
+			p.fmultiplyloop = false;
+		}
+		else if (strcmp(argv[i], "-fno-scan-loop") == 0) {
+			p.fscanloop = false;
+		}
+
 		// If the argument doen't fit, throw error
 		else {
 			// These arguments need another argument
@@ -176,5 +249,16 @@ argparser(int argc, char* argv[])
 			p.cont = false;
 		}
 	}
+
+	// Make sure functionallity is never broken
+	switch (p.olang) {
+		case O_BF_BRAINFUCK:
+			p.fmultiplyloop = false;
+			p.fscanloop		= false;
+			break;
+		default:
+			break;
+	}
+
 	return p;
 }

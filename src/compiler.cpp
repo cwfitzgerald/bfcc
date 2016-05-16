@@ -66,12 +66,11 @@ BFCC::optimize()
 		return false;
 	}
 
-	BFCC_OP_OperationConcatination(ilist, errhdlr);
-	BFCC_OP_DeadCodeElimination(ilist, errhdlr);
-	BFCC_OP_NoOpRemoval(ilist, errhdlr);
-	BFCC_OP_LazyMoves(ilist, errhdlr);
-	// BFCC_OP_MultiplyLoopRem(ilist, errhdlr);
-	BFCC_OP_ScanLoopRem(ilist, errhdlr);
+	BFCC_OP_OperationConcatination(params, ilist, errhdlr);
+	BFCC_OP_DeadCodeElimination(params, ilist, errhdlr);
+	BFCC_OP_LazyMoves(params, ilist, errhdlr);
+	BFCC_OP_MultiplyLoopRem(params, ilist, errhdlr);
+	BFCC_OP_ScanLoopRem(params, ilist, errhdlr);
 
 	return true;
 }
