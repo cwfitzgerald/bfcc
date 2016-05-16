@@ -9,7 +9,7 @@
 long
 BFCC_OP_NoOpRemoval(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
-	(void)err;
+	(void) err;
 
 	auto newend		= std::remove_if(oplist.begin(), oplist.end(), [](auto x) { return x.type == NOP; });
 	long rem_amount = oplist.end() - newend;
@@ -23,7 +23,7 @@ BFCC_OP_NoOpRemoval(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& e
 long
 BFCC_OP_OperationConcatination(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
-	(void)err;
+	(void) err;
 
 	BFCC_Instruction lastop = { oplist.front().type };
 	long lastoploc			= 0;
@@ -55,7 +55,7 @@ BFCC_OP_OperationConcatination(std::vector<BFCC_Instruction>& oplist, BFCC_Error
 long
 BFCC_OP_JumpRematch(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
-	(void)err;
+	(void) err;
 
 	std::vector<long> loop_indexes;
 	long corrected = 0;
@@ -132,7 +132,7 @@ BFCC_OP_DeadCodeElimination(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Ha
 long
 BFCC_OP_LazyMoves(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
 {
-	(void)err;
+	(void) err;
 	long mv_removed = 0;
 
 	auto offsetable = [](BFCC_Instruction i) { return ((i.type == DADD) || (i.type == DPRINT) || (i.type == DGET)); };
@@ -280,6 +280,38 @@ BFCC_OP_MultiplyLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handle
 			clean = false;
 		}
 		else if (oplist[i].type != DADD && oplist[i].type != DPTRMV) {
+			clean = false;
+		}
+	}
+
+	BFCC_OP_NoOpRemoval(oplist, err);
+
+	return loops_removed;
+}
+
+long
+BFCC_OP_ScanLoopRem(std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
+{
+	long loops_removed = 0;
+	size_t last_left   = 0;
+	bool clean		   = true;
+
+	for (size_t i = 0; i < oplist.size(); i++) {
+		if (oplist[i].type == JZ) {
+			last_left = i;
+			clean	 = true;
+		}
+		// Clean says that the loop is mearly composed of moves.
+		else if (oplist[i].type == JNZ && clean == true) {
+			auto& tmp			  = oplist[last_left];
+			tmp.type			  = SCAN;
+			tmp.data1			  = oplist[last_left + 1].data1;
+			oplist[last_left + 1] = { NOP };
+			oplist[i]			  = { NOP };
+
+			clean = false;
+		}
+		else if (oplist[i].type != DPTRMV) {
 			clean = false;
 		}
 	}

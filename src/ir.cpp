@@ -102,6 +102,10 @@ BFCC_IR_PPrint(std::vector<BFCC_Instruction> oplist)
 				out << "DMUL\tDATA_MULTIPLY\t     " << op.data1 << ", " << op.data2 << "\t" << op.offset;
 				break;
 
+			case SCAN:
+				out << "SCAN\tSCAN_FOR_ZERO\t     " << op.data1 << "\t\t" << op.offset;
+				break;
+
 			case NOP:
 				out << "NOP\tNO_OPERATION\t     \t\tDo nothing";
 				break;

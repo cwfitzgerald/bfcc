@@ -94,6 +94,11 @@ BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist)
 				break;
 			}
 
+			case SCAN:
+				while (data[dptr] != 0) {
+					dptr = icp(dptr + ilist[iptr].data1);
+				}
+
 			case NOP:
 			case END:
 				break;

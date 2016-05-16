@@ -47,6 +47,8 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 				endsrc += ']';
 				break;
 
+			case DDCALC:
+			case DMUL:
 			case NOP:
 			case END:
 				break;
