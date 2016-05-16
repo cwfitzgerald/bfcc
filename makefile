@@ -1,4 +1,5 @@
 WARNINGS = -Wall -Wextra -Wno-sign-compare -Wno-unused-variable 
+FULLWARN = -Wall -Wextra -Wpedantic
 STD = -std=c++14
 OPTIMIZE = -O3
 DEBUG = 
@@ -28,7 +29,7 @@ debug: bfcc
 profile: DEBUG = -pg
 profile: bfcc
 
-warn: WARNINGS = -Wall -Wextra -Wpedantic
+warn: WARNINGS = $(FULLWARN)
 warn: bfcc
 
 bfcc: $(OBJ_FILES)

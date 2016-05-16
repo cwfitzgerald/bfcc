@@ -14,7 +14,8 @@ struct BFCC_Error {
 class BFCC_Error_Handler {
   private:
 	std::vector<BFCC_Error> errlist;
-	bool haserr = false;
+	size_t errcount = 0;
+	size_t warcount = 0;
 
   public:
 	void add_error(std::string&, long linenum, long charnum, bool err = true);

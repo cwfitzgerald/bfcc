@@ -4,12 +4,13 @@
 #include "../error.hpp"
 #include "../ir.hpp"
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
 class BFCC_Target {
   protected:
-	std::string endsrc;
+	std::stringstream endsrc;
 	BFCC_Parameters params;
 	BFCC_Error_Handler* errhdlr;
 

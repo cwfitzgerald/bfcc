@@ -8,7 +8,9 @@ BFCC_Error_Handler::add_error(std::string& instr, long linenum, long charnum, bo
 {
 	errlist.push_back({ instr, linenum, charnum, err });
 	if (err)
-		haserr = true;
+		errcount++;
+	else
+		warcount++;
 }
 
 void
@@ -16,7 +18,9 @@ BFCC_Error_Handler::add_error(const char* instr, long linenum, long charnum, boo
 {
 	errlist.push_back({ instr, linenum, charnum, err });
 	if (err)
-		haserr = true;
+		errcount++;
+	else
+		warcount++;
 }
 
 bool
@@ -46,17 +50,30 @@ BFCC_Error_Handler::print_errors(std::ostream& err)
 #ifdef _WIN32
 			err << "Warning";
 #else
-			err << "\033[1;31mWarning\033[0m";
+			err << "\033[1;35mWarning\033[0m";
 #endif
 		}
 		err << " at Line " << e.linen << " Char " << e.charn << ": " << e.message << "\n";
 	}
 
-	return haserr;
+	if (errcount) {
+		if (errcount == 1)
+			err << "1 error generated.\n";
+		else
+			err << errcount << " errors generated.\n";
+	}
+	if (warcount) {
+		if (errcount == 1)
+			err << "1 warning generated.\n";
+		else
+			err << warcount << " warnings generated.\n";
+	}
+
+	return bool(errcount);
 }
 
 bool
 BFCC_Error_Handler::has_error()
 {
-	return haserr;
+	return bool(errcount);
 }

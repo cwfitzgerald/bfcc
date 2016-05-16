@@ -4,48 +4,91 @@
 #include <memory>
 #include <string>
 
+template <char up, char down, class T>
+char
+char_choose(T num)
+{
+	if (num > 0) {
+		return up;
+	}
+	else {
+		return down;
+	}
+}
+
 std::string
 BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 {
+	long cur_offset = 0;
+
+	auto adjust_offset = [& cur = cur_offset, this ](long newoff)
+	{
+		long diff  = newoff - cur;
+		long adiff = std::abs(diff);
+
+		char c = '>';
+		if (diff < 0) {
+			c = '<';
+		}
+
+		for (size_t i = 0; i < adiff; i++) {
+			endsrc << c;
+		}
+		cur = newoff;
+	};
+
 	for (auto instr : ilist) {
 		switch (instr.type) {
 			case DPTRMV: {
-				char c = '>';
-				if (instr.data1 < 0)
-					c = '<';
+				char c = char_choose<'>', '<'>(instr.data1);
 
-				for (int i = 0; i < labs(instr.data1); i++)
-					endsrc += c;
+				for (int i = 0; i < std::abs(instr.data1 - cur_offset); i++)
+					endsrc << c;
+				cur_offset = 0;
 				break;
 			}
 
 			case DADD: {
-				char c = '+';
-				if (instr.data1 < 0)
-					c = '-';
+				adjust_offset(instr.offset);
 
-				for (int i = 0; i < labs(instr.data1); i++)
-					endsrc += c;
+				char c = char_choose<'+', '-'>(instr.data1);
+
+				for (int i = 0; i < std::abs(instr.data1); i++)
+					endsrc << c;
 				break;
 			}
 
 			case DPRINT:
+				adjust_offset(instr.offset);
+
 				for (int i = 0; i < instr.data1; i++)
-					endsrc += '.';
+					endsrc << '.';
 				break;
 
 			case DGET:
+				adjust_offset(instr.offset);
+
 				for (int i = 0; i < instr.data1; i++)
-					endsrc += ',';
+					endsrc << ',';
 				break;
 
 			case JZ:
-				endsrc += '[';
+				endsrc << '[';
 				break;
 
 			case JNZ:
-				endsrc += ']';
+				endsrc << ']';
 				break;
+
+			case SCAN: {
+				endsrc << '[';
+				char c = char_choose<'>', '<'>(instr.data1);
+				for (size_t i = 0; i < std::abs(instr.data1); i++) {
+					endsrc << c;
+				}
+				endsrc << ']';
+				break;
+			}
 
 			case DDCALC:
 			case DMUL:
@@ -55,5 +98,7 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 		}
 	}
 
-	return endsrc;
+	endsrc << '\n';
+
+	return endsrc.str();
 }
