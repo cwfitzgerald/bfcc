@@ -27,6 +27,13 @@ argparser(int argc, char* argv[])
 					 "  -l, --language <language>      Set the input language (default: brainfuck)\n"
 					 "  -t, --target <language>        Set the target language (default: interpreter)\n"
 					 "      --list-languages           List all available input/target languages\n"
+					 "Optimization Options:\n"
+					 "  -O0,                           Disable all optimziations\n"
+					 "  -O1,                           Enable linear optimziations\n"
+					 "  -02,                           -O1 with loop optimziations\n"
+					 "  -O3,                           -O2 with vectorizer (default)\n"
+					 "  -O-,                           REALLY disable all optimziations (don't do it)\n"
+					 "      --list-optimizations       List all optimization controls\n"
 					 "Debug Options:\n"
 					 "  -v, --verbose <level>          Set verbosity level (0-3)\n"
 					 "  -d, --debug                    Turn on debuging: (Memory Dumps: #)\n"
@@ -36,13 +43,14 @@ argparser(int argc, char* argv[])
 
 	auto list_languages = []() {
 		std::cerr << "List of supported languages:\n\n"
-				  << "L.. = Lexing supported (you can compile this language)\n"
+
+					 "L.. = Lexing supported (you can compile this language)\n"
 					 ".T. = Targetting/Codegen supported (you can compile to this language\n"
 					 "..P = Pritty print supported (output code is formatted correctly\n\n"
 
 					 "The interpreter:\n"
 					 ".T. = interpreter\n"
-					 "Brainfuck dirivities:\n"
+					 "Brainfuck derivatives:\n"
 					 "LT. - brainfuck\n"
 					 "... - tinybf\n"
 					 "Full langages:\n"
@@ -51,6 +59,26 @@ argparser(int argc, char* argv[])
 					 ".TP - java\n"
 					 ".TP - python\n";
 
+	};
+
+	auto list_optimizations = []() {
+		std::cerr << "List of all available optimizations:\n\n"
+
+					 "All optimization levels have the optimizations of the level\n"
+					 "below it (-O2 has all of -O1's optimizations etc.)\n\n"
+
+					 "-O0:                     ||\n"
+					 "-foperator-concatination || -fno-operator-concatination\n"
+					 "                         ||\n"
+					 "-O1:                     ||\n"
+					 "-fdead-code-elimination  || -fno-dead-code-elimination\n"
+					 "-flazy-moves             || -fno-lazy-moves\n"
+					 "                         ||\n"
+					 "-O2:                     ||\n"
+					 "-fmultiply-loops         || -fno-multiply-loops\n"
+					 "-fscan-loops             || -fno-scan-loops\n"
+					 "                         ||\n"
+					 "-O3: (default)           ||\n";
 	};
 
 	// Iterate through all arguments
@@ -159,6 +187,11 @@ argparser(int argc, char* argv[])
 			p.cont = false;
 		}
 
+		else if (strcmp(argv[i], "--list-optimizations") == 0) {
+			list_optimizations();
+			p.cont = false;
+		}
+
 		// Optimization (general)
 		else if (argv[i][0] == '-' && argv[i][1] == 'O') {
 			switch (argv[i][2]) {
@@ -210,7 +243,7 @@ argparser(int argc, char* argv[])
 		else if (strcmp(argv[i], "-fmultiply-loops") == 0) {
 			p.fmultiplyloop = true;
 		}
-		else if (strcmp(argv[i], "-fscan-loop") == 0) {
+		else if (strcmp(argv[i], "-fscan-loops") == 0) {
 			p.fscanloop = true;
 		}
 
@@ -226,7 +259,7 @@ argparser(int argc, char* argv[])
 		else if (strcmp(argv[i], "-fno-multiply-loops") == 0) {
 			p.fmultiplyloop = false;
 		}
-		else if (strcmp(argv[i], "-fno-scan-loop") == 0) {
+		else if (strcmp(argv[i], "-fno-scan-loops") == 0) {
 			p.fscanloop = false;
 		}
 
