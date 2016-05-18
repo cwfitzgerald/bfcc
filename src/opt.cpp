@@ -313,7 +313,7 @@ BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& 
 					itterator++;
 				}
 			}
-			*(--itterator) = { DMUL, -1, denominator > 1, 0 };
+			*(--itterator) = { DMUL, effects[startoffset], denominator > 1, 0 };
 
 			clean = false;
 		}

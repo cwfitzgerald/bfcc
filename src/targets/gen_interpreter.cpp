@@ -79,6 +79,7 @@ BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist)
 					while ((multiplication_cache % ilist[iptr].data1) != 0) {
 						multiplication_cache += 256;
 					}
+					multiplication_cache /= ilist[iptr].data1;
 				}
 				break;
 
@@ -113,8 +114,8 @@ BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist)
 			  << instructions_executed << " instructions were executed."
 			  << "\n"
 			  << static_cast<double>(totaltime.count()) / instructions_executed << " ns per instruction. ("
-			  << instructions_executed / (static_cast<double>(totaltime.count()) / 1'000'000'000)
-			  << " instructions per second)"
+			  << instructions_executed * (1'000 / static_cast<double>(totaltime.count()))
+			  << " Mega-instructions per second)"
 			  << "\n";
 
 	return "";

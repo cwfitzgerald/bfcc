@@ -19,6 +19,7 @@ char_choose(T num)
 std::string
 BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 {
+	long dptr = 0;
 	long cur_offset = 0;
 
 	auto adjust_offset = [& cur = cur_offset, this ](long newoff)
@@ -40,16 +41,13 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 	for (auto instr : ilist) {
 		switch (instr.type) {
 			case DPTRMV: {
-				char c = char_choose<'>', '<'>(instr.data1);
-
-				for (int i = 0; i < std::abs(instr.data1 - cur_offset); i++)
-					endsrc << c;
-				cur_offset = 0;
+				dptr += instr.data1;
+				adjust_offset(dptr);
 				break;
 			}
 
 			case DADD: {
-				adjust_offset(instr.offset);
+				adjust_offset(dptr+instr.offset);
 
 				char c = char_choose<'+', '-'>(instr.data1);
 
@@ -59,37 +57,30 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 			}
 
 			case DPRINT:
-				adjust_offset(instr.offset);
+				adjust_offset(dptr+instr.offset);
 
 				for (int i = 0; i < instr.data1; i++)
 					endsrc << '.';
 				break;
 
 			case DGET:
-				adjust_offset(instr.offset);
+				adjust_offset(dptr+instr.offset);
 
 				for (int i = 0; i < instr.data1; i++)
 					endsrc << ',';
 				break;
 
 			case JZ:
-				endsrc << '[';
+				adjust_offset(dptr);
+				endsrc << '[';			
 				break;
 
 			case JNZ:
+				adjust_offset(dptr);
 				endsrc << ']';
 				break;
 
-			case SCAN: {
-				endsrc << '[';
-				char c = char_choose<'>', '<'>(instr.data1);
-				for (size_t i = 0; i < std::abs(instr.data1); i++) {
-					endsrc << c;
-				}
-				endsrc << ']';
-				break;
-			}
-
+			case SCAN:
 			case DDCALC:
 			case DMUL:
 			case NOP:

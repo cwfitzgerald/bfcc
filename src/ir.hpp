@@ -6,6 +6,7 @@
 #include <cinttypes>
 #include <memory>
 #include <string>
+#include <vector>
 
 enum BFCC_Bytecode : uint8_t { NOP, END, DPTRMV, DADD, DPRINT, DGET, JZ, JNZ, DDCALC, DMUL, SCAN };
 
