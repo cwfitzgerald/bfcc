@@ -5,9 +5,7 @@
 #include <string>
 
 template <char up, char down, class T>
-char
-char_choose(T num)
-{
+char char_choose(T num) {
 	if (num > 0) {
 		return up;
 	}
@@ -16,14 +14,11 @@ char_choose(T num)
 	}
 }
 
-std::string
-BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
-{
-	long dptr = 0;
+std::string BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist) {
+	long dptr		= 0;
 	long cur_offset = 0;
 
-	auto adjust_offset = [& cur = cur_offset, this ](long newoff)
-	{
+	auto adjust_offset = [& cur = cur_offset, this ](long newoff) {
 		long diff  = newoff - cur;
 		long adiff = std::abs(diff);
 
@@ -47,7 +42,7 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 			}
 
 			case DADD: {
-				adjust_offset(dptr+instr.offset);
+				adjust_offset(dptr + instr.offset);
 
 				char c = char_choose<'+', '-'>(instr.data1);
 
@@ -57,14 +52,14 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 			}
 
 			case DPRINT:
-				adjust_offset(dptr+instr.offset);
+				adjust_offset(dptr + instr.offset);
 
 				for (int i = 0; i < instr.data1; i++)
 					endsrc << '.';
 				break;
 
 			case DGET:
-				adjust_offset(dptr+instr.offset);
+				adjust_offset(dptr + instr.offset);
 
 				for (int i = 0; i < instr.data1; i++)
 					endsrc << ',';
@@ -72,7 +67,7 @@ BFCC_Target_Brainfuck::generate(std::vector<BFCC_Instruction> ilist)
 
 			case JZ:
 				adjust_offset(dptr);
-				endsrc << '[';			
+				endsrc << '[';
 				break;
 
 			case JNZ:

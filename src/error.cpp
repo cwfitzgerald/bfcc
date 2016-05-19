@@ -3,29 +3,23 @@
 #include <iostream>
 #include <string>
 
-void
-BFCC_Error_Handler::add_error(std::string& instr, long linenum, long charnum, bool err)
-{
-	errlist.push_back({ instr, linenum, charnum, err });
+void BFCC_Error_Handler::add_error(std::string& instr, long linenum, long charnum, bool err) {
+	errlist.push_back({instr, linenum, charnum, err});
 	if (err)
 		errcount++;
 	else
 		warcount++;
 }
 
-void
-BFCC_Error_Handler::add_error(const char* instr, long linenum, long charnum, bool err)
-{
-	errlist.push_back({ instr, linenum, charnum, err });
+void BFCC_Error_Handler::add_error(const char* instr, long linenum, long charnum, bool err) {
+	errlist.push_back({instr, linenum, charnum, err});
 	if (err)
 		errcount++;
 	else
 		warcount++;
 }
 
-bool
-BFCC_Error_Handler::print_errors(std::ostream& err)
-{
+bool BFCC_Error_Handler::print_errors(std::ostream& err) {
 	auto sorterr = [](BFCC_Error left, BFCC_Error right) {
 		if (left.linen == -1 && left.charn == -1)
 			return false;
@@ -72,8 +66,6 @@ BFCC_Error_Handler::print_errors(std::ostream& err)
 	return bool(errcount);
 }
 
-bool
-BFCC_Error_Handler::has_error()
-{
+bool BFCC_Error_Handler::has_error() {
 	return bool(errcount);
 }

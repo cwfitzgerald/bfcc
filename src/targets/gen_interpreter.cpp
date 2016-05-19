@@ -6,9 +6,7 @@
 #include <iostream>
 #include <string>
 
-std::string
-BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist)
-{
+std::string BFCC_Target_Interpreter::generate(std::vector<BFCC_Instruction> ilist) {
 	std::vector<uint8_t> data(32768 + 16, 0);
 	size_t dptr = 0;
 

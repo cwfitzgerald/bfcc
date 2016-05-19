@@ -6,8 +6,7 @@
 #include <iostream>
 #include <memory>
 
-BFCC::BFCC(BFCC_Parameters& p)
-{
+BFCC::BFCC(BFCC_Parameters& p) {
 	// Set internal parameters
 	params = p;
 
@@ -44,9 +43,7 @@ BFCC::BFCC(BFCC_Parameters& p)
 	}
 }
 
-bool
-BFCC::generate_ir(std::string instr)
-{
+bool BFCC::generate_ir(std::string instr) {
 	// The compiling process can't continue if there is an error
 	if (errhdlr.has_error()) {
 		return false;
@@ -59,9 +56,7 @@ BFCC::generate_ir(std::string instr)
 	return errhdlr.has_error();
 }
 
-bool
-BFCC::optimize()
-{
+bool BFCC::optimize() {
 	if (errhdlr.has_error()) {
 		return false;
 	}
@@ -75,9 +70,7 @@ BFCC::optimize()
 	return true;
 }
 
-bool
-BFCC::generate_code()
-{
+bool BFCC::generate_code() {
 	if (errhdlr.has_error()) {
 		return false;
 	}
@@ -87,15 +80,11 @@ BFCC::generate_code()
 	return errhdlr.has_error();
 }
 
-std::string
-BFCC::get_code()
-{
+std::string BFCC::get_code() {
 	return final;
 }
 
-bool
-BFCC::print_ir()
-{
+bool BFCC::print_ir() {
 	if (errhdlr.has_error()) {
 		return false;
 	}
@@ -105,16 +94,12 @@ BFCC::print_ir()
 	return true;
 }
 
-bool
-BFCC::print_code()
-{
+bool BFCC::print_code() {
 	*params.out << final << std::endl;
 
 	return true;
 }
 
-bool
-BFCC::print_errors()
-{
+bool BFCC::print_errors() {
 	return errhdlr.print_errors(*params.err);
 }

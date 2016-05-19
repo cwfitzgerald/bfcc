@@ -8,9 +8,7 @@
 #define ERROR_DISPLAY_STRING "\033[1;31mError:\033[0m "
 #endif
 
-BFCC_Parameters
-argparser(int argc, char* argv[])
-{
+BFCC_Parameters argparser(int argc, char* argv[]) {
 	BFCC_Parameters p;
 
 	auto display_help = [&argv]() {

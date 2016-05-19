@@ -7,9 +7,7 @@
 #include <iostream>
 #include <vector>
 
-long
-BFCC_OP_NoOpRemoval(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_NoOpRemoval(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	(void) err;
 
 	auto newend		= std::remove_if(oplist.begin(), oplist.end(), [](auto x) { return x.type == NOP; });
@@ -21,16 +19,15 @@ BFCC_OP_NoOpRemoval(BFCC_Parameters& params, std::vector<BFCC_Instruction>& opli
 	return rem_amount;
 }
 
-long
-BFCC_OP_OperationConcatination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_OperationConcatination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist,
+									BFCC_Error_Handler& err) {
 	(void) err;
 
 	if (params.fdeadcodeelimination == false) {
 		return 0;
 	}
 
-	BFCC_Instruction lastop = { oplist.front().type };
+	BFCC_Instruction lastop = {oplist.front().type};
 	long lastoploc			= 0;
 	long totalrem			= 0;
 
@@ -45,7 +42,7 @@ BFCC_OP_OperationConcatination(BFCC_Parameters& params, std::vector<BFCC_Instruc
 			if (lastop.type != JZ && lastop.type != JNZ) {
 				oplist[lastoploc] = lastop;
 				if (i + 1 < oplist.size()) {
-					std::fill(oplist.begin() + lastoploc + 1, oplist.begin() + i, BFCC_Instruction({ NOP }));
+					std::fill(oplist.begin() + lastoploc + 1, oplist.begin() + i, BFCC_Instruction({NOP}));
 				}
 				totalrem += i - lastoploc;
 			}
@@ -59,9 +56,7 @@ BFCC_OP_OperationConcatination(BFCC_Parameters& params, std::vector<BFCC_Instruc
 	return totalrem;
 }
 
-long
-BFCC_OP_JumpRematch(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_JumpRematch(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	(void) err;
 	(void) params;
 
@@ -93,9 +88,8 @@ BFCC_OP_JumpRematch(BFCC_Parameters& params, std::vector<BFCC_Instruction>& opli
 	return corrected;
 }
 
-long
-BFCC_OP_DeadCodeElimination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_DeadCodeElimination(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist,
+								 BFCC_Error_Handler& err) {
 	long loops_removed = 0;
 	auto removeloop	= [&params, &oplist, &err](long start) {
 		if (params.fdeadcodeelimination == false) {
@@ -118,7 +112,7 @@ BFCC_OP_DeadCodeElimination(BFCC_Parameters& params, std::vector<BFCC_Instructio
 			}
 		}
 
-		std::fill(oplist.begin() + start, oplist.end() - (oplist.size() - end - 1), BFCC_Instruction({ NOP }));
+		std::fill(oplist.begin() + start, oplist.end() - (oplist.size() - end - 1), BFCC_Instruction({NOP}));
 	};
 
 	if (oplist.front().type == JZ) {
@@ -143,9 +137,7 @@ BFCC_OP_DeadCodeElimination(BFCC_Parameters& params, std::vector<BFCC_Instructio
 	return loops_removed;
 }
 
-long
-BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	(void) err;
 
 	if (params.flazymoves == 0) {
@@ -171,7 +163,7 @@ BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist
 		}
 		else {
 			if (curoffset) {
-				new_oplist.push_back({ DPTRMV, curoffset });
+				new_oplist.push_back({DPTRMV, curoffset});
 				curoffset = 0;
 			}
 			new_oplist.push_back(o);
@@ -185,9 +177,7 @@ BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist
 	return mv_removed;
 }
 
-long
-BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	long loops_removed = 0;
 	size_t last_left   = 0;
 	bool clean		   = true;
@@ -279,9 +269,10 @@ BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& 
 				continue;
 			}
 			else if ((effects[startoffset] & 1) == 0) {
-				err.add_error("Balanced loops which decrement the starting cell by an even number will be infinite if "
-							  "current cell is odd.",
-							  left_itterator->startline, left_itterator->startchar - 1, false);
+				err.add_error(
+					"Balanced loops which decrement the starting cell by an even number will be infinite if "
+					"current cell is odd.",
+					left_itterator->startline, left_itterator->startchar - 1, false);
 			}
 
 			// If allowed, actually optimize
@@ -298,22 +289,22 @@ BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& 
 			// calculations done to figure out how many times the loop
 			// actauly runs
 			if (denominator > 1) {
-				*itterator = { DDCALC, denominator };
+				*itterator = {DDCALC, denominator};
 				itterator++;
 			}
 			for (size_t j = 0; itterator != right_itterator + 1; j++) {
 				if (j < effects.size()) {
 					if (effects[j] != 0 && j != startoffset) {
-						*itterator = { DMUL, effects[j], denominator > 1, static_cast<long>(j - startoffset) };
+						*itterator = {DMUL, effects[j], denominator > 1, static_cast<long>(j - startoffset)};
 						itterator++;
 					}
 				}
 				else {
-					*itterator = { NOP };
+					*itterator = {NOP};
 					itterator++;
 				}
 			}
-			*(--itterator) = { DMUL, effects[startoffset], denominator > 1, 0 };
+			*(--itterator) = {DMUL, effects[startoffset], denominator > 1, 0};
 
 			clean = false;
 		}
@@ -327,9 +318,7 @@ BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& 
 	return loops_removed;
 }
 
-long
-BFCC_OP_ScanLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err)
-{
+long BFCC_OP_ScanLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& oplist, BFCC_Error_Handler& err) {
 	if (params.fscanloop == false) {
 		return 0;
 	}
@@ -348,8 +337,8 @@ BFCC_OP_ScanLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instruction>& opli
 			auto& tmp			  = oplist[last_left];
 			tmp.type			  = SCAN;
 			tmp.data1			  = oplist[last_left + 1].data1;
-			oplist[last_left + 1] = { NOP };
-			oplist[i]			  = { NOP };
+			oplist[last_left + 1] = {NOP};
+			oplist[i]			  = {NOP};
 
 			clean = false;
 		}

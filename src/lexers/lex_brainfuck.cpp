@@ -5,9 +5,7 @@
 #include <string>
 #include <vector>
 
-std::vector<std::shared_ptr<BFCC_Node>>
-BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr)
-{
+std::vector<std::shared_ptr<BFCC_Node>> BFCC_Lexer_Brainfuck::gen_nodes(std::string& instr) {
 	std::vector<BFCC_Token_Brainfuck> tokenlist;
 	tokenlist.reserve(instr.size());
 

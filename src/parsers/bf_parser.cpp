@@ -5,9 +5,8 @@
 #include <tuple>
 #include <vector>
 
-std::vector<std::shared_ptr<BFCC_Node>>
-BFCC_Parser_BrainfuckLike(std::vector<BFCC_Token_Brainfuck> tokenlist, BFCC_Error_Handler& err)
-{
+std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike(std::vector<BFCC_Token_Brainfuck> tokenlist,
+																  BFCC_Error_Handler& err) {
 	long curline = 1;
 	long curchar = 1;
 

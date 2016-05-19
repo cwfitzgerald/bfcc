@@ -30,11 +30,7 @@ class BFCC_AST_to_IR : public BFCC_Visitor {
 	std::vector<BFCC_Instruction> ilist;
 
   public:
-	BFCC_AST_to_IR(BFCC_Parameters& p, BFCC_Error_Handler& e)
-	  : params(p)
-	  , errhdlr(e)
-	{
-	}
+	BFCC_AST_to_IR(BFCC_Parameters& p, BFCC_Error_Handler& e) : params(p), errhdlr(e) {}
 	std::vector<BFCC_Instruction> generate(std::vector<std::shared_ptr<BFCC_Node>> v);
 
 	void visit(std::shared_ptr<BFCC_Node_DPTRmv> n);

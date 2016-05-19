@@ -15,9 +15,7 @@
 #define ERROR_DISPLAY_STRING "\033[1;31mError:\033[0m "
 #endif
 
-int
-main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	auto parameters = argparser(argc, argv);
 	if (parameters.cont == false) {
 		return 1;
