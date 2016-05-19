@@ -15,7 +15,7 @@ class BFCC_Lexer {
   public:
 	BFCC_Lexer(BFCC_Parameters& p, BFCC_Error_Handler& e) {
 		params = p;
-		err	= &e;
+		err    = &e;
 	};
 	virtual std::vector<std::shared_ptr<BFCC_Node>> gen_nodes(std::string& instr) = 0;
 };

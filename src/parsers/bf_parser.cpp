@@ -6,7 +6,7 @@
 #include <vector>
 
 std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike(std::vector<BFCC_Token_Brainfuck> tokenlist,
-																  BFCC_Error_Handler& err) {
+                                                                  BFCC_Error_Handler& err) {
 	long curline = 1;
 	long curchar = 1;
 
@@ -49,7 +49,7 @@ std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike(std::vector<BF
 				if (loopstack.size()) {
 					node = loopstack.back();
 					node->set_data(std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()),
-								   curline, curchar);
+					               curline, curchar);
 					loopstack.pop_back();
 					loopstartlocations.pop_back();
 				}
@@ -85,7 +85,7 @@ std::vector<std::shared_ptr<BFCC_Node>> BFCC_Parser_BrainfuckLike(std::vector<BF
 
 	while (loopstack.size()) {
 		err.add_error("Unmatched \"[\"", std::get<0>(loopstartlocations.back()), std::get<1>(loopstartlocations.back()),
-					  false);
+		              false);
 
 		auto node = loopstack.back();
 		loopstack.pop_back();

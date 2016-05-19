@@ -13,70 +13,70 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 
 	auto display_help = [&argv]() {
 		std::cerr << "Usage:\n"
-				  << argv[0] << " [options] -i [inputfile] -o [outputfile]\n\n"
-				  << "I/O Options:\n"
-					 "  -i, --input-file <filename>    Set file to read the program from\n"
-					 "  -o, --output-file <filename>   Set file to write final program to\n"
-					 "  -e, --error-file <filename>    Set file to redirect errors to\n"
-					 "  -c, --code <program>           Run the program given\n"
-					 "If no input is found: output will be written to STDOUT\n"
-					 "                      errors will be written to STDERR\n"
-					 "Language Options:\n"
-					 "  -l, --language <language>      Set the input language (default: brainfuck)\n"
-					 "  -t, --target <language>        Set the target language (default: interpreter)\n"
-					 "      --list-languages           List all available input/target languages\n"
-					 "Optimization Options:\n"
-					 "  -O0,                           Disable all optimziations\n"
-					 "  -O1,                           Enable linear optimziations\n"
-					 "  -02,                           -O1 with loop optimziations\n"
-					 "  -O3,                           -O2 with vectorizer (default)\n"
-					 "  -O-,                           REALLY disable all optimziations (don't do it)\n"
-					 "      --list-optimizations       List all optimization controls\n"
-					 "Debug Options:\n"
-					 "  -v, --verbose <level>          Set verbosity level (0-3)\n"
-					 "  -d, --debug                    Turn on debuging: (Memory Dumps: #)\n"
-					 "  -h, --help                     Print this message\n";
+		          << argv[0] << " [options] -i [inputfile] -o [outputfile]\n\n"
+		          << "I/O Options:\n"
+		             "  -i, --input-file <filename>    Set file to read the program from\n"
+		             "  -o, --output-file <filename>   Set file to write final program to\n"
+		             "  -e, --error-file <filename>    Set file to redirect errors to\n"
+		             "  -c, --code <program>           Run the program given\n"
+		             "If no input is found: output will be written to STDOUT\n"
+		             "                      errors will be written to STDERR\n"
+		             "Language Options:\n"
+		             "  -l, --language <language>      Set the input language (default: brainfuck)\n"
+		             "  -t, --target <language>        Set the target language (default: interpreter)\n"
+		             "      --list-languages           List all available input/target languages\n"
+		             "Optimization Options:\n"
+		             "  -O0,                           Disable all optimziations\n"
+		             "  -O1,                           Enable linear optimziations\n"
+		             "  -02,                           -O1 with loop optimziations\n"
+		             "  -O3,                           -O2 with vectorizer (default)\n"
+		             "  -O-,                           REALLY disable all optimziations (don't do it)\n"
+		             "      --list-optimizations       List all optimization controls\n"
+		             "Debug Options:\n"
+		             "  -v, --verbose <level>          Set verbosity level (0-3)\n"
+		             "  -d, --debug                    Turn on debuging: (Memory Dumps: #)\n"
+		             "  -h, --help                     Print this message\n";
 
 	};
 
 	auto list_languages = []() {
 		std::cerr << "List of supported languages:\n\n"
 
-					 "L.. = Lexing supported (you can compile this language)\n"
-					 ".T. = Targetting/Codegen supported (you can compile to this language\n"
-					 "..P = Pritty print supported (output code is formatted correctly\n\n"
+		             "L.. = Lexing supported (you can compile this language)\n"
+		             ".T. = Targetting/Codegen supported (you can compile to this language\n"
+		             "..P = Pritty print supported (output code is formatted correctly\n\n"
 
-					 "The interpreter:\n"
-					 ".T. = interpreter\n"
-					 "Brainfuck derivatives:\n"
-					 "LT. - brainfuck\n"
-					 "... - tinybf\n"
-					 "Full langages:\n"
-					 ".TP - c\n"
-					 ".TP - go\n"
-					 ".TP - java\n"
-					 ".TP - python\n";
+		             "The interpreter:\n"
+		             ".T. = interpreter\n"
+		             "Brainfuck derivatives:\n"
+		             "LT. - brainfuck\n"
+		             "... - tinybf\n"
+		             "Full langages:\n"
+		             ".TP - c\n"
+		             ".TP - go\n"
+		             ".TP - java\n"
+		             ".TP - python\n";
 
 	};
 
 	auto list_optimizations = []() {
 		std::cerr << "List of all available optimizations:\n\n"
 
-					 "All optimization levels have the optimizations of the level\n"
-					 "below it (-O2 has all of -O1's optimizations etc.)\n\n"
+		             "All optimization levels have the optimizations of the level\n"
+		             "below it (-O2 has all of -O1's optimizations etc.)\n\n"
 
-					 "-O0:                     ||\n"
-					 "-foperator-concatination || -fno-operator-concatination\n"
-					 "                         ||\n"
-					 "-O1:                     ||\n"
-					 "-fdead-code-elimination  || -fno-dead-code-elimination\n"
-					 "-flazy-moves             || -fno-lazy-moves\n"
-					 "                         ||\n"
-					 "-O2:                     ||\n"
-					 "-fmultiply-loops         || -fno-multiply-loops\n"
-					 "-fscan-loops             || -fno-scan-loops\n"
-					 "                         ||\n"
-					 "-O3: (default)           ||\n";
+		             "-O0:                     ||\n"
+		             "-foperator-concatination || -fno-operator-concatination\n"
+		             "                         ||\n"
+		             "-O1:                     ||\n"
+		             "-fdead-code-elimination  || -fno-dead-code-elimination\n"
+		             "-flazy-moves             || -fno-lazy-moves\n"
+		             "                         ||\n"
+		             "-O2:                     ||\n"
+		             "-fmultiply-loops         || -fno-multiply-loops\n"
+		             "-fscan-loops             || -fno-scan-loops\n"
+		             "                         ||\n"
+		             "-O3: (default)           ||\n";
 	};
 
 	// Iterate through all arguments
@@ -123,7 +123,7 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 					p.verbosity = 3;
 				else {
 					std::cerr << ERROR_DISPLAY_STRING << argv[i] << " is not a valid argument to " << argv[i - 1]
-							  << ".\n";
+					          << ".\n";
 					p.cont = false;
 				}
 				continue;
@@ -138,7 +138,7 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 					p.ilang = I_BF_TINYBF;
 				else {
 					std::cerr << ERROR_DISPLAY_STRING << argv[i]
-							  << " is not a valid input language. Use --list-languages for more info.\n";
+					          << " is not a valid input language. Use --list-languages for more info.\n";
 					p.cont = false;
 				}
 				continue;
@@ -163,7 +163,7 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 				}
 				else {
 					std::cerr << ERROR_DISPLAY_STRING << argv[i]
-							  << " is not a valid target language. Use --list-languages for more info.\n";
+					          << " is not a valid target language. Use --list-languages for more info.\n";
 					p.cont = false;
 				}
 				continue;
@@ -196,30 +196,30 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 				case '-':
 					p.foperatorconcatination = false;
 					p.fdeadcodeelimination   = false;
-					p.flazymoves			 = false;
-					p.fmultiplyloop			 = false;
-					p.fscanloop				 = false;
+					p.flazymoves             = false;
+					p.fmultiplyloop          = false;
+					p.fscanloop              = false;
 				case '0':
 					p.foperatorconcatination = true;
 					p.fdeadcodeelimination   = false;
-					p.flazymoves			 = false;
-					p.fmultiplyloop			 = false;
-					p.fscanloop				 = false;
+					p.flazymoves             = false;
+					p.fmultiplyloop          = false;
+					p.fscanloop              = false;
 					break;
 				case '1':
 					p.foperatorconcatination = true;
 					p.fdeadcodeelimination   = true;
-					p.flazymoves			 = true;
-					p.fmultiplyloop			 = false;
-					p.fscanloop				 = false;
+					p.flazymoves             = true;
+					p.fmultiplyloop          = false;
+					p.fscanloop              = false;
 					break;
 				case '2':
 				case '3':
 					p.foperatorconcatination = true;
 					p.fdeadcodeelimination   = true;
-					p.flazymoves			 = true;
-					p.fmultiplyloop			 = true;
-					p.fscanloop				 = true;
+					p.flazymoves             = true;
+					p.fmultiplyloop          = true;
+					p.fscanloop              = true;
 					break;
 				default:
 					std::cerr << ERROR_DISPLAY_STRING << argv[i][2] << " is not a valid argument to -O\n";
@@ -265,11 +265,11 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 		else {
 			// These arguments need another argument
 			if ((strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input-file") == 0) ||
-				(strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output-file") == 0) ||
-				(strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--error-file") == 0) ||
-				(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--code") == 0) ||
-				(strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--language") == 0) ||
-				(strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--target") == 0)) {
+			    (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output-file") == 0) ||
+			    (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--error-file") == 0) ||
+			    (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--code") == 0) ||
+			    (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--language") == 0) ||
+			    (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--target") == 0)) {
 				std::cerr << ERROR_DISPLAY_STRING << argv[i] << " requires an argument.\n";
 			}
 
@@ -285,7 +285,7 @@ BFCC_Parameters argparser(int argc, char* argv[]) {
 	switch (p.olang) {
 		case O_BF_BRAINFUCK:
 			p.fmultiplyloop = false;
-			p.fscanloop		= false;
+			p.fscanloop     = false;
 			break;
 		default:
 			break;
