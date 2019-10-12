@@ -163,7 +163,7 @@ long BFCC_OP_LazyMoves(BFCC_Parameters& params, std::vector<BFCC_Instruction>& o
 		}
 		else {
 			if (curoffset) {
-				new_oplist.push_back({DPTRMV, curoffset});
+				new_oplist.push_back({DPTRMV, (long) curoffset});
 				curoffset = 0;
 			}
 			new_oplist.push_back(o);
@@ -289,13 +289,13 @@ long BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instructi
 			// calculations done to figure out how many times the loop
 			// actauly runs
 			if (denominator > 1) {
-				*itterator = {DDCALC, denominator};
+				*itterator = {DDCALC, (long) denominator};
 				itterator++;
 			}
 			for (size_t j = 0; itterator != right_itterator + 1; j++) {
 				if (j < effects.size()) {
 					if (effects[j] != 0 && j != startoffset) {
-						*itterator = {DMUL, effects[j], denominator > 1, static_cast<long>(j - startoffset)};
+						*itterator = {DMUL, (long) effects[j], denominator > 1, static_cast<long>(j - startoffset)};
 						itterator++;
 					}
 				}
@@ -304,7 +304,7 @@ long BFCC_OP_MultiplyLoopRem(BFCC_Parameters& params, std::vector<BFCC_Instructi
 					itterator++;
 				}
 			}
-			*(--itterator) = {DMUL, effects[startoffset], denominator > 1, 0};
+			*(--itterator) = {DMUL, (long) effects[startoffset], denominator > 1, 0};
 
 			clean = false;
 		}
